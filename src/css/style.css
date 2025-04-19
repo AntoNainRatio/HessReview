@@ -1,0 +1,27 @@
+#gameboard {
+    width: 400px;
+    height: 400px;
+    display: flex;
+    flex-wrap: wrap ;
+}
+
+.square {
+    width: 50px;
+    height: 50px;
+}
+
+.white {
+    background-color:lightblue;
+}
+
+.black {
+    background-color: darkcyan;
+}
+
+.whitePiece{
+    fill: rgb(218, 218, 218);
+}
+
+.blackPiece{
+    fill: rgb(34, 34, 34);
+}
