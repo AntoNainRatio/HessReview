@@ -9,6 +9,8 @@ class Board{
     createEmpty(){
         const height = 8;
         const width = 8;
+        const rows='12345678';
+        const cols='hgfedcba';
         for(let i = 0; i < height; i++){
             this.board[i] = [];
             for(let j = 0; j < width; j++){
@@ -21,6 +23,32 @@ class Board{
                 }
                 else{
                     square.classList.add('black')
+                }
+                if (i == 7){
+                    const col_id = document.createElement('div')
+                    col_id.classList.add('col_id')
+                    col_id.classList.add('coord')
+                    if (square.classList.contains('white')){
+                        col_id.classList.add('blackWrited')
+                    }
+                    else{
+                        col_id.classList.add('whiteWrited')
+                    }
+                    col_id.innerText = cols[j]
+                    square.appendChild(col_id)
+                }
+                if (j == 0){
+                    const row_id = document.createElement('div')
+                    row_id.classList.add('row_id')
+                    row_id.classList.add('coord')
+                    if (square.classList.contains('white')){
+                        row_id.classList.add('blackWrited')
+                    }
+                    else{
+                        row_id.classList.add('whiteWrited')
+                    }
+                    row_id.innerText = rows[i]
+                    square.appendChild(row_id)
                 }
                 this.board[i].push(square)
                 this.boardElement.appendChild(square)
