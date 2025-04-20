@@ -58,39 +58,39 @@ class Board{
 
     setUpPieces(){
         const pieces = [
-            // { type: 'Rook', color: 'white', position: { x: 0, y: 0 } },
-            // { type: 'Rook', color: 'white', position: { x: 7, y: 0 } },
-            // { type: 'Knight', color: 'white', position: { x: 1, y: 0 } },
-            // { type: 'Knight', color: 'white', position: { x: 6, y: 0 } },
-            // { type: 'Bishop', color: 'white', position: { x: 2, y: 0 } },
-            // { type: 'Bishop', color: 'white', position: { x: 5, y: 0 } },
-            // { type: 'Queen', color: 'white', position: { x: 3, y: 0 } },
-            // { type: 'King', color: 'white', position: { x: 4, y: 0 } },
-            { p: new Pawn(Color.WHITE), position: { x: 0, y: 1 } },
-            { p: new Pawn(Color.WHITE), position: { x: 1, y: 1 } },
-            { p: new Pawn(Color.WHITE), position: { x: 2, y: 1 } },
-            { p: new Pawn(Color.WHITE), position: { x: 3, y: 1 } },
-            { p: new Pawn(Color.WHITE), position: { x: 4, y: 1 } },
-            { p: new Pawn(Color.WHITE), position: { x: 5, y: 1 } },
-            { p: new Pawn(Color.WHITE), position: { x: 6, y: 1 } },
-            { p: new Pawn(Color.WHITE), position: { x: 7, y: 1 } },
+            { p : new Rook('w'), position: { x: 0, y: 0 } },
+            { p : new Rook('w'), position: { x: 7, y: 0 } },
+            { p : new Knight('w'), position: { x: 1, y: 0 } },
+            { p : new Knight('w'), position: { x: 6, y: 0 } },
+            { p : new Bishop('w'), position: { x: 2, y: 0 } },
+            { p : new Bishop('w'), position: { x: 5, y: 0 } },
+            { p : new Queen('w'), position: { x: 3, y: 0 } },
+            { p : new King('w'), position: { x: 4, y: 0 } },
+            { p: new Pawn('w'), position: { x: 0, y: 1 } },
+            { p: new Pawn('w'), position: { x: 1, y: 1 } },
+            { p: new Pawn('w'), position: { x: 2, y: 1 } },
+            { p: new Pawn('w'), position: { x: 3, y: 1 } },
+            { p: new Pawn('w'), position: { x: 4, y: 1 } },
+            { p: new Pawn('w'), position: { x: 5, y: 1 } },
+            { p: new Pawn('w'), position: { x: 6, y: 1 } },
+            { p: new Pawn('w'), position: { x: 7, y: 1 } },
 
-            // { type: 'Rook', color: 'black', position: { x: 0, y: 7 } },
-            // { type: 'Rook', color: 'black', position: { x: 7, y: 7 } },
-            // { type: 'Knight', color: 'black', position: { x: 1, y: 7 } },
-            // { type: 'Knight', color: 'black', position: { x: 6, y: 7 } },
-            // { type: 'Bishop', color: 'black', position: { x: 2, y: 7 } },
-            // { type: 'Bishop', color: 'black', position: { x: 5, y: 7 } },
-            // { type: 'Queen', color: 'black', position: { x: 3, y: 7 } },
-            // { type: 'King', color: 'black', position: { x: 4, y: 7 } },
-            { p : new Pawn(Color.BLACK), position: { x: 0, y: 6 } },
-            { p : new Pawn(Color.BLACK), position: { x: 1, y: 6 } },
-            { p : new Pawn(Color.BLACK), position: { x: 2, y: 6 } },
-            { p : new Pawn(Color.BLACK), position: { x: 3, y: 6 } },
-            { p : new Pawn(Color.BLACK), position: { x: 4, y: 6 } },
-            { p : new Pawn(Color.BLACK), position: { x: 5, y: 6 } },
-            { p : new Pawn(Color.BLACK), position: { x: 6, y: 6 } },
-            { p : new Pawn(Color.BLACK), position: { x: 7, y: 6 } }
+            { p : new Rook('b'), position: { x: 0, y: 7 } },
+            { p : new Rook('b'), position: { x: 7, y: 7 } },
+            { p : new Knight('b'), position: { x: 1, y: 7 } },
+            { p : new Knight('b'), position: { x: 6, y: 7 } },
+            { p : new Bishop('b'), position: { x: 2, y: 7 } },
+            { p : new Bishop('b'), position: { x: 5, y: 7 } },
+            { p : new Queen('b'), position: { x: 3, y: 7 } },
+            { p : new King('b'), position: { x: 4, y: 7 } },
+            { p : new Pawn('b'), position: { x: 0, y: 6 } },
+            { p : new Pawn('b'), position: { x: 1, y: 6 } },
+            { p : new Pawn('b'), position: { x: 2, y: 6 } },
+            { p : new Pawn('b'), position: { x: 3, y: 6 } },
+            { p : new Pawn('b'), position: { x: 4, y: 6 } },
+            { p : new Pawn('b'), position: { x: 5, y: 6 } },
+            { p : new Pawn('b'), position: { x: 6, y: 6 } },
+            { p : new Pawn('b'), position: { x: 7, y: 6 } }
         ];
 
         pieces.forEach(piece => {
@@ -99,7 +99,13 @@ class Board{
                 const pieceDiv = document.createElement('div');
                 pieceDiv.classList.add(piece.p.constructor.name);
                 pieceDiv.style.color = piece.p.color;
-                pieceDiv.innerText = piece.p.char;
+                const pieceImg = document.createElement('img')
+                const pieceCode = piece.p.color+piece.p.char;
+                pieceImg.src = `img/chesspieces/${pieceCode}.png`
+                pieceImg.alt = pieceCode;
+                pieceImg.classList.add('piece')
+                
+                square.appendChild(pieceImg)
                 square.appendChild(pieceDiv);
             }
         )

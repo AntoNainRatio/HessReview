@@ -7,6 +7,9 @@
 
 .square {
     position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     width: 50px;
     height: 50px;
 }
@@ -28,14 +31,14 @@
 }
 
 .coord{
-    font-size: 70%;
+    font-size: 60%;
     
     font-weight: bold;
 }
 
 .col_id{
     position: absolute;
-    bottom: 4%;
+    bottom: 2%;
     right: 6%;
     display: flex;
 }
@@ -53,4 +56,13 @@
 
 .blackWrited{
     color: darkcyan;
+}
+
+.piece{
+    width: 90%;
+    height: 90%;
+    align-items: center;
+    justify-content: center;
+    object-fit: contain;
+    pointer-events: none;
 }
