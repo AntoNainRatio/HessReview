@@ -23,4 +23,9 @@ class Piece{
     canMove(from, to, board){
         throw "canMove() must be implemented in specific piece classes."
     }
+
+    getImagePath(){
+        return `img/chesspieces/${this.color}${this.char}.png`
+    }
+      
 }
