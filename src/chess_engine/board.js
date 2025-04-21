@@ -19,16 +19,16 @@ class Board{
                 square.setAttribute('square-id',(i*8+j))
                 if ((i + j) % 2 == 0)
                 {
-                    square.classList.add('white')
+                    square.classList.add('white_square')
                 }
                 else{
-                    square.classList.add('black')
+                    square.classList.add('black_square')
                 }
                 if (i == 7){
                     const col_id = document.createElement('div')
                     col_id.classList.add('col_id')
                     col_id.classList.add('coord')
-                    if (square.classList.contains('white')){
+                    if (square.classList.contains('white_square')){
                         col_id.classList.add('blackWrited')
                     }
                     else{
@@ -41,7 +41,7 @@ class Board{
                     const row_id = document.createElement('div')
                     row_id.classList.add('row_id')
                     row_id.classList.add('coord')
-                    if (square.classList.contains('white')){
+                    if (square.classList.contains('white_square')){
                         row_id.classList.add('blackWrited')
                     }
                     else{
@@ -96,17 +96,36 @@ class Board{
         pieces.forEach(piece => {
                 const squareId = piece.position.y * 8 + piece.position.x;
                 const square = this.board[piece.position.y][piece.position.x];
+
                 const pieceDiv = document.createElement('div');
-                pieceDiv.classList.add(piece.p.constructor.name);
+                pieceDiv.classList.add('piece');
                 pieceDiv.style.color = piece.p.color;
+                pieceDiv.setAttribute('draggable',true)
+
+                
+
                 const pieceImg = document.createElement('img')
                 const pieceCode = piece.p.color+piece.p.char;
                 pieceImg.src = `img/chesspieces/${pieceCode}.png`
                 pieceImg.alt = pieceCode;
-                pieceImg.classList.add('piece')
-                
-                square.appendChild(pieceImg)
+                pieceImg.classList.add("image")
+
+                const pieceSpe = document.createElement('div');
+                pieceSpe.classList.add(piece.p.constructor.name)
+
+                if (piece.p.color == 'w'){
+                    pieceDiv.classList.add('w')
+                }
+                else{
+                    pieceDiv.classList.add('b')
+                }
+
+                pieceDiv.appendChild(pieceImg)
+                pieceDiv.appendChild(pieceSpe)
                 square.appendChild(pieceDiv);
+
+                console.log(square)
+                this.board[piece.position.y][piece.position.x] = square
             }
         )
     }
