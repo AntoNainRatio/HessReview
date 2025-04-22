@@ -3,6 +3,20 @@ class Queen extends Piece{
         super(color,"Q")
     }
 
+    fillDirections(){
+        // rook
+        this.directions.push([-1,0])
+        this.directions.push([1,0])
+        this.directions.push([0,-1])
+        this.directions.push([0,1])
+
+        // bishop
+        this.directions.push([-1,-1])
+        this.directions.push([-1,1])
+        this.directions.push([1,-1])
+        this.directions.push([1,1])
+    }
+
     canMove(from,to,board){
         const start_x = from[0]
         const start_y = from[1]
@@ -50,5 +64,20 @@ class Queen extends Piece{
         else{
             return false
         }
+    }
+
+    getPossibleMoves(board){
+        let res = []
+        for(const dir of this.directions){
+            const x = this.x + dir[0];
+            const y = this.y + dir[1];
+            while (board.isOnBoard([x,y]) && board.getPiece([x,y]) == null){
+                res.push([x,y])
+            }
+            if (board.isOnBoard([x,y]) && board.getPiece([x,y]).color != this.color){
+                res.push([x,y])
+            }
+        }
+        return res
     }
 }

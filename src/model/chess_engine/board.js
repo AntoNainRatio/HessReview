@@ -4,24 +4,24 @@ class Board{
         this.create()
     }
 
-    createSupPieceList(color){
+    createSupPieceList(color,y){
         // Create Superior piece list
         let res=[]
-        res.push(new Rook(color));
-        res.push(new Knight(color));
-        res.push(new Bishop(color));
-        res.push(new King(color));
-        res.push(new Queen(color));
-        res.push(new Bishop(color));
-        res.push(new Knight(color));
-        res.push(new Rook(color));
+        res.push(new Rook(color,0,y));
+        res.push(new Knight(color,1,y));
+        res.push(new Bishop(color,2,y));
+        res.push(new King(color,3,y));
+        res.push(new Queen(color,4,y));
+        res.push(new Bishop(color,5,y));
+        res.push(new Knight(color,6,y));
+        res.push(new Rook(color,7,y));
         return res;
     }
 
-    createPawnList(width,color){
+    createPawnList(width,color,y){
         let res=[]
         for(let i = 0; i < width; i++){
-            res.push(new Pawn(color))
+            res.push(new Pawn(color,i,y))
         }
         return res;
     }
@@ -31,8 +31,8 @@ class Board{
         const width = 8;
 
         // White side
-        this.board.push(this.createSupPieceList('w'))
-        this.board.push(this.createPawnList(width,'w'))
+        this.board.push(this.createSupPieceList('w',0))
+        this.board.push(this.createPawnList(width,'w',1))
 
         for(let i = 2; i < height - 2; i++){
             let tmp = []
@@ -43,8 +43,8 @@ class Board{
         }
 
         // Black side
-        this.board.push(this.createPawnList(width,'b'))
-        this.board.push(this.createSupPieceList('b'))
+        this.board.push(this.createPawnList(width,'b',6))
+        this.board.push(this.createSupPieceList('b',7))
     }
 
     getPiece(coords){
@@ -54,6 +54,23 @@ class Board{
 
     move(start,end){
         this.board[end[1]][end[[0]]] = this.board[start[1]][start[0]]
+        const p = this.getPiece(end);
+        if (p != null){
+            p.x = end[0]
+            p.y = end[1]
+        }
         this.board[start[1]][start[0]] = null
+    }
+
+    isOnBoard(pos){
+        const x = pos[0]
+        const y = pos[1]
+        if (x < 0 || x >= 8){
+            return false
+        }
+        if (y < 0 || y >= 8){
+            return false
+        }
+        return true
     }
 }

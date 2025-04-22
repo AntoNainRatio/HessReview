@@ -1,6 +1,19 @@
 class Knight extends Piece{
-    constructor(color){
-        super(color,"N")
+    constructor(color,x,y){
+        super(color,"N",x,y)
+        this.fillDirections()
+    }
+
+    fillDirections(){
+        this.directions.push([-2,1])
+        this.directions.push([-2,-1])
+        this.directions.push([2,1])
+        this.directions.push([2,-1])
+
+        this.directions.push([-1,2])
+        this.directions.push([-1,-2])
+        this.directions.push([1,2])
+        this.directions.push([1,-2])
     }
 
     canMove(from,to,board){
@@ -19,5 +32,20 @@ class Knight extends Piece{
             return Math.abs(diff_y) == 1
         }
         return false
+    }
+
+    getPossibleMoves(board){
+        let res = []
+        for (const dir of this.directions){
+            const x = this.x + dir[0];
+            const y = this.y + dir[1];
+            if (board.isOnBoard([x,y])){
+                const onTarget = board.getPiece([x,y])
+                if (onTarget != null && onTarget.color != this.color){
+                    res.push([x,y])
+                }
+            }
+        }
+        return res
     }
 }

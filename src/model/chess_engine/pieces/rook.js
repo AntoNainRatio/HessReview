@@ -1,6 +1,15 @@
 class Rook extends Piece{
-    constructor(color){
-        super(color,"R")
+    constructor(color,x,y){
+        super(color,"R",x,y)
+        this.fillDirections()
+    }
+
+    fillDirections(){
+        this.directions.push([-1,0])
+        this.directions.push([1,0])
+        this.directions.push([0,-1])
+        this.directions.push([0,1])
+
     }
 
     canMove(from,to,board){
@@ -33,5 +42,20 @@ class Rook extends Piece{
             }
             return true
         }
+    }
+
+    getPossibleMoves(board){
+        let res = []
+        for(const dir of this.directions){
+            const x = this.x + dir[0];
+            const y = this.y + dir[1];
+            while (board.isOnBoard([x,y]) && board.getPiece([x,y]) == null){
+                res.push([x,y])
+            }
+            if (board.isOnBoard([x,y]) && board.getPiece([x,y]).color != this.color){
+                res.push([x,y])
+            }
+        }
+        return res
     }
 }

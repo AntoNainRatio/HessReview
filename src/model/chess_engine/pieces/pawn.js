@@ -1,7 +1,15 @@
 class Pawn extends Piece{
-    constructor(color){
-        super(color,"P")
+    constructor(color,x,y){
+        super(color,"P",x,y)
         this.firstMove = true
+        this.fillDirections()
+    }
+
+    fillDirections(){
+        const dir = this.color == 'w'? 1: -1
+        this.directions.push([0,dir])
+        this.directions.push([-1,dir])
+        this.directions.push([1,dir])
     }
 
     canMove(from,to,board){
@@ -35,5 +43,36 @@ class Pawn extends Piece{
         else{
             return false
         }
+    }
+
+    getPossibleMoves(board){
+        let res = []
+        for(let i = 0; i < this.directions.length; i++){
+            // console.log(this.directions[i])
+            const x = this.x + this.directions[i][0]
+            const y = this.y + this.directions[i][1]
+            if (!board.isOnBoard([x,y])){
+                continue
+            }
+            if (this.directions[0] != 0){
+                // console.log(`x: ${x}, y: ${y}`)
+                const target = board.getPiece([x,y])
+                if (target != null && target.color != this.color){
+                    res.push([x,y])
+                }
+            }
+            else{
+                if (board.getPiece([x,y]) == null){
+                    res.push([x,y])
+                    if (board.getPiece([x,y+dir[1]]) == null){
+                        res.push([x,y])
+                    }
+                }
+                else{
+                    continue
+                }
+            }
+        }
+        return res
     }
 }

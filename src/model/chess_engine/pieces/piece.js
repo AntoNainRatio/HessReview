@@ -1,7 +1,10 @@
 class Piece{
-    constructor(color,char){
+    constructor(color,char,x,y){
         this.color_ = color;
         this.char_ = char;
+        this.x = x;
+        this.y = y;
+        this.directions = []
     }
 
     get char(){
@@ -27,5 +30,12 @@ class Piece{
     getImagePath(){
         return `img/chesspieces/${this.color}${this.char}.png`
     }
-      
+     
+    fillDirections(){
+        throw "fillDirections() must be implemented in specific piece classes."
+    }
+
+    getPossibleMoves(board){
+        throw "getPossileMoves() must be implemented in specific piece classes."
+    }
 }
