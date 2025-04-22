@@ -23,7 +23,10 @@ class Game{
         if (dest != null && piece.color == dest.color){
             return false
         }
-        if (piece.canMove(start,end,this.Board.board)){
+        if (piece.canMove(start,end,this.Board)){
+            if (piece instanceof Pawn){
+                piece.firstMove = false
+            }
             this.Board.move(start,end)
             this.switchTurn()
             return true

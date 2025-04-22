@@ -10,7 +10,6 @@ class GameController{
     }
 
     onClick(pos){
-        console.log(pos)
         if(this.selected != null){
             if(this.game.movePiece(this.selected,[pos.x,pos.y])){
                 this.boardRenderer.updateSquare([pos.x,pos.y])
