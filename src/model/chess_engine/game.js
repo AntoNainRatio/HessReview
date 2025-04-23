@@ -28,6 +28,15 @@ class Game{
         }
     }
 
+    getCheckedKingPos(){
+        if(this.blackKing.isCheck){
+            return [this.blackKing.x,this.blackKing.y]
+        }
+        if (this.whiteKing.isCheck){
+            return [this.whiteKing.x,this.whiteKing.y]
+        }
+    }
+
     putKingInCheck(piece,move){
        
         // save current board state and pieces
@@ -134,7 +143,10 @@ class Game{
             return false
         }
         const legalMoves = this.getAllLegalMoves(this.turn)
-        console.log(legalMoves.length)
+        if(this.isInCheck(this.turn)){
+            this.turn == 'w' ? this.whiteKing.isCheck = true : this.blackKing.isCheck = true
+        }
+        // console.log(legalMoves.length)
         const isLegal = legalMoves.some(
             (m) => m.piece === piece && m.to[0] === end[0] && m.to[1] === end[1]
           );
@@ -147,16 +159,15 @@ class Game{
                 this.deletePieceFromList(capture)
             }
             this.Board.move(start,end)
-            this.switchTurn()
-            if (this.isCheckMate(this.turn,legalMoves)){
-                console.log("Checkmate !!")
-                console.log(`${this.turn} lost...`)
+            if (!this.isInCheck(this.turn)){
+                this.turn == 'w' ? this.whiteKing.isCheck = false: this.blackKing.isCheck = false
             }
-
-            
+            this.switchTurn()
+            if (this.isInCheck(this.turn)){
+                this.turn == 'w' ? this.whiteKing.isCheck = true : this.blackKing.isCheck = true
+            }
             return true
         }
-
         
         return false
     }

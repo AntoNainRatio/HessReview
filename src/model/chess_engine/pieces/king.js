@@ -2,6 +2,7 @@ class King extends Piece{
     constructor(color,x,y){
         super(color,"K",x,y)
         this.isCheck = false
+        this.fillDirections()
     }
 
     fillDirections(){
@@ -37,8 +38,16 @@ class King extends Piece{
         for(const dir of this.directions){
             const x = this.x + dir[0];
             const y = this.y + dir[1];
-            if (board.isOnBoard([x,y]) && board.getPiece([x,y]).color != this.color){
-                res.push([x,y])
+            
+            if (board.isOnBoard([x,y])){
+                const dest_piece = board.getPiece([x,y])
+                if (dest_piece == null){
+                    res.push([x,y])
+                }
+                else if(dest_piece.color != this.color){
+                    res.push([x,y])
+                }
+                
             }
         }
         return res

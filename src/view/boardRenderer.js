@@ -117,8 +117,10 @@ class BoardRenderer {
     const id = y * 8 + x;
     const square = document.querySelector(`[square-id="${id}"]`);
     if (square){
+      console.log("Turn check on")
       square.classList.add('check')
     }
+    console.log([x,y])
     this.updateSquare([x,y])
   }
 
@@ -128,7 +130,17 @@ class BoardRenderer {
     if (square) {
       square.classList.remove('check');
     }
+    console.log([x,y])
     this.updateSquare([x,y])
+  }
+
+  clearKings(whiteKing, blackKing){
+    console.log("whiteKing:")
+    console.log(whiteKing)
+    this.uncheck(whiteKing.x,whiteKing.y)
+    console.log("blackKing:")
+    console.log(blackKing)
+    this.uncheck(blackKing.x,blackKing.y)
   }
 
   setClickHandler(callback){
