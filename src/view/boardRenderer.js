@@ -113,6 +113,24 @@ class BoardRenderer {
     }
   }
 
+  check(x,y){
+    const id = y * 8 + x;
+    const square = document.querySelector(`[square-id="${id}"]`);
+    if (square){
+      square.classList.add('check')
+    }
+    this.updateSquare([x,y])
+  }
+
+  uncheck(x,y){
+    const id = y * 8 + x;
+    const square = document.querySelector(`[square-id="${id}"]`);
+    if (square) {
+      square.classList.remove('check');
+    }
+    this.updateSquare([x,y])
+  }
+
   setClickHandler(callback){
     this.boardElement.addEventListener('click', (e) => {
       const target = e.target.closest('.square')

@@ -39,10 +39,23 @@ class Knight extends Piece{
         for (const dir of this.directions){
             const x = this.x + dir[0];
             const y = this.y + dir[1];
+            
             if (board.isOnBoard([x,y])){
+                //console.log(`x: ${x}, y: ${y}`)
                 const onTarget = board.getPiece([x,y])
-                if (onTarget != null && onTarget.color != this.color){
+                //console.log("onTarget:")
+                //console.log(onTarget)
+                if (onTarget == null){
                     res.push([x,y])
+                    //console.log(`x: ${x}, y: ${y}`)
+                }
+                else if(onTarget.color != this.color){
+                    res.push([x,y])
+                    //console.log(`x: ${x}, y: ${y}`)
+                }
+                else{
+                    // console.log("impossible:")
+                    // console.log(`x: ${x}, y: ${y}`)
                 }
             }
         }

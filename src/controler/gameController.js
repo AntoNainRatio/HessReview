@@ -26,5 +26,19 @@ class GameController{
         else{
             this.selected = null
         }
+
+        if(this.game.whiteKing.isCheck){
+            this.boardRenderer.check(this.game.whiteKing.x,this.game.whiteKing.y)
+        }
+        else{
+            this.boardRenderer.uncheck(this.game.whiteKing.x,this.game.whiteKing.y)
+        }
+
+        if(this.game.blackKing.isCheck){
+            this.boardRenderer.check(this.game.blackKing.x,this.game.blackKing.y)
+        }
+        else{
+            this.boardRenderer.uncheck(this.game.blackKing.x,this.game.blackKing.y)
+        }
     }
 }

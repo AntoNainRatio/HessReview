@@ -47,10 +47,12 @@ class Rook extends Piece{
     getPossibleMoves(board){
         let res = []
         for(const dir of this.directions){
-            const x = this.x + dir[0];
-            const y = this.y + dir[1];
+            let x = this.x + dir[0];
+            let y = this.y + dir[1];
             while (board.isOnBoard([x,y]) && board.getPiece([x,y]) == null){
                 res.push([x,y])
+                x += dir[0]
+                y += dir[1]
             }
             if (board.isOnBoard([x,y]) && board.getPiece([x,y]).color != this.color){
                 res.push([x,y])

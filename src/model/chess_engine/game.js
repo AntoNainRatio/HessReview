@@ -29,30 +29,61 @@ class Game{
     }
 
     putKingInCheck(piece,move){
+       
+        // save current board state and pieces
         const save_x = piece.x
         const save_y = piece.y
+
         const save_capture = this.Board.getPiece(move)
 
-        const res = this.isTurnKingSafe(piece.color)
-        
-        this.Board.board[save_y][save_x] = piece
-        piece.x = save_x;
-        piece.y = save_y
-        this.Board.board[move[1]][move[1]] = save_capture
+        this.Board.board[move[1]][move[0]] = piece
+        this.Board.board[save_y][save_x] = null
 
-        return !res
+        piece.x = move[0]
+        piece.y = move[1]
+
+        // deleting potential capture from its pieceList
+        if(save_capture != null){
+            this.deletePieceFromList(save_capture)
+        }
+
+        // get answer
+        const res = this.isInCheck(piece.color)
+        
+        // putting back potential capture
+        if (save_capture != null){
+            this.addPieceFromList(save_capture)
+        }
+
+        // Undo modification on board and piece
+        this.Board.board[save_y][save_x] = piece
+
+        piece.x = save_x;
+        piece.y = save_y;
+
+        this.Board.board[move[1]][move[0]] = save_capture
+
+        return res
     }
 
-    isTurnKingSafe(){
-        const king_pos = this.turn == 'w' ? [this.whiteKing.x,this.whiteKing.y] : [this.blackKing.x,this.blackKing.y]
-        console.log(king_pos)
-        const attacker = this.turn == 'w' ? this.blackPieces : this.whitePieces
+    isInCheck(color){
+        const king = color == 'w' ? this.whiteKing : this.blackKing
+        const king_pos = [king.x,king.y]
+
+        // console.log(king_pos)
+        const attacker = color == 'w' ? this.blackPieces : this.whitePieces
         for(let i = 0; i < attacker.length; i++){
             if (attacker[i].canMove([attacker[i].x,attacker[i].y],king_pos,this.Board)){
-                return false
-            }
+                // console.log("attacker :")
+                // console.log(attacker[i])
+                return true
+            } 
         }
-        return true
+        return false
+    }
+
+    isCheckMate(color,legalMoves){
+        return this.isInCheck(color) && legalMoves.length == 0
     }
 
     deletePieceFromList(piece){
@@ -63,6 +94,11 @@ class Game{
         }
       }
 
+    addPieceFromList(piece){
+        const list = piece.color === 'w' ? this.whitePieces : this.blackPieces;
+        list.push(piece)
+      }
+
     switchTurn(){
         if (this.turn == 'w'){
             this.turn = 'b'
@@ -70,6 +106,8 @@ class Game{
         else{
             this.turn = 'w'
         }
+
+        // console.log(`${this.turn} turn`)
     }
 
     getAllLegalMoves(color){
@@ -95,20 +133,31 @@ class Game{
         if (dest != null && piece.color == dest.color){
             return false
         }
-        const legalMoves = this.getAllLegalMoves(this.turn) 
-        console.log(legalMoves)
-        if (piece.canMove(start,end,this.Board)){
+        const legalMoves = this.getAllLegalMoves(this.turn)
+        console.log(legalMoves.length)
+        const isLegal = legalMoves.some(
+            (m) => m.piece === piece && m.to[0] === end[0] && m.to[1] === end[1]
+          );
+        if (isLegal){
             if (piece instanceof Pawn){
                 piece.firstMove = false
             }
             const capture = this.Board.getPiece(end)
             if (capture != null){
-                this.deletePieceFromList()
+                this.deletePieceFromList(capture)
             }
             this.Board.move(start,end)
             this.switchTurn()
+            if (this.isCheckMate(this.turn,legalMoves)){
+                console.log("Checkmate !!")
+                console.log(`${this.turn} lost...`)
+            }
+
+            
             return true
         }
+
+        
         return false
     }
 }

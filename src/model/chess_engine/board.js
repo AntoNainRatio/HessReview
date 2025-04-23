@@ -73,4 +73,17 @@ class Board{
         }
         return true
     }
+
+    dump(){
+        for (let i = 0; i < 8; i++){
+            for (let j = 0; j < 8; j++){
+                if (this.board[i][j] == null){
+                    console.log(` `)
+                }else{
+                    console.log(`${this.board[i][j].char}`)
+                }
+            
+            }
+        }
+    }
 }

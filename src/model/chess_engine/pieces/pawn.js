@@ -7,8 +7,8 @@ class Pawn extends Piece{
 
     fillDirections(){
         const dir = this.color == 'w'? 1: -1
-        this.directions.push([0,dir])
         this.directions.push([-1,dir])
+        this.directions.push([0,dir])
         this.directions.push([1,dir])
     }
 
@@ -51,11 +51,11 @@ class Pawn extends Piece{
             // console.log(this.directions[i])
             const x = this.x + this.directions[i][0]
             const y = this.y + this.directions[i][1]
+            // console.log(`x: ${x}, y: ${y}`)
             if (!board.isOnBoard([x,y])){
                 continue
             }
-            if (this.directions[0] != 0){
-                // console.log(`x: ${x}, y: ${y}`)
+            if (this.directions[i][0] != 0){
                 const target = board.getPiece([x,y])
                 if (target != null && target.color != this.color){
                     res.push([x,y])
@@ -64,14 +64,12 @@ class Pawn extends Piece{
             else{
                 if (board.getPiece([x,y]) == null){
                     res.push([x,y])
-                    if (board.getPiece([x,y+dir[1]]) == null){
-                        res.push([x,y])
+                    if (this.firstMove && board.getPiece([x,y+this.directions[i][1]]) == null){
+                        res.push([x,y+this.directions[i][1]])
                     }
                 }
-                else{
-                    continue
-                }
             }
+
         }
         return res
     }

@@ -1,6 +1,7 @@
 class Queen extends Piece{
-    constructor(color){
-        super(color,"Q")
+    constructor(color,x,y){
+        super(color,"Q",x,y)
+        this.fillDirections()
     }
 
     fillDirections(){
@@ -32,7 +33,7 @@ class Queen extends Piece{
             const dir_y = diff_y > 0 ? 1 : -1
             let curr_x = start_x + dir_x;
             let curr_y = start_y + dir_y;
-            while (curr_x != end_x && curr_y != end_x){
+            while (curr_x != end_x && curr_y != end_y){
                 if (board.getPiece([curr_x,curr_y]) != null){
                     return false
                 }
@@ -69,10 +70,12 @@ class Queen extends Piece{
     getPossibleMoves(board){
         let res = []
         for(const dir of this.directions){
-            const x = this.x + dir[0];
-            const y = this.y + dir[1];
+            let x = this.x + dir[0];
+            let y = this.y + dir[1];
             while (board.isOnBoard([x,y]) && board.getPiece([x,y]) == null){
                 res.push([x,y])
+                x += dir[0]
+                y += dir[1]
             }
             if (board.isOnBoard([x,y]) && board.getPiece([x,y]).color != this.color){
                 res.push([x,y])
