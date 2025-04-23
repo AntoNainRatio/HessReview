@@ -169,9 +169,26 @@ class Game{
             if (piece instanceof Pawn || piece instanceof Rook || piece instanceof King){
                 piece.firstMove = false
             }
-            const capture = this.Board.getPiece(end)
+
+            if(piece instanceof Pawn && Math.abs(end[1] - start[1]) == 2){
+                console.log("canBePEP -> true")
+                piece.canBePEP = true
+            }
+            let capture = this.Board.getPiece(end)
+            
             if (capture != null){
                 this.deletePieceFromList(capture)
+            }
+            else if (piece instanceof Pawn && Math.abs(end[0]-start[0]) != 0){
+                capture = this.Board.getPiece([end[0],start[1]])
+                this.Board.board[start[1]][end[0]] = null
+                if(capture != null){
+                    console.log("PEP: piece deleted")
+                    this.deletePieceFromList(capture)
+                }
+                else{
+                    console.log("PEP: piece not found")
+                }
             }
             this.Board.move(start,end)
             if (!this.isInCheck(this.turn)){
