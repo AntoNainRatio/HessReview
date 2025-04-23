@@ -18,8 +18,10 @@ class BoardRenderer {
     const x = coords[0]
     const y = coords[1]
 
+    // get square representing coords
     const square_id = y * 8 + x;
     const square = this.boardElement.childNodes[square_id];
+
     const oldPiece = square.querySelector('.piece');
 
     if (oldPiece){
@@ -32,6 +34,10 @@ class BoardRenderer {
       img.classList.add('piece')
       img.src = newPiece.getImagePath()
       square.appendChild(img)
+    }
+    else if(square.classList.contains('check')){ 
+      // if no piece in square and contains 'check' -> remove check
+      square.classList.remove('check')
     }
   }
 
@@ -117,10 +123,10 @@ class BoardRenderer {
     const id = y * 8 + x;
     const square = document.querySelector(`[square-id="${id}"]`);
     if (square){
-      console.log("Turn check on")
+      // console.log("Turn check on")
       square.classList.add('check')
     }
-    console.log([x,y])
+    // console.log([x,y])
     this.updateSquare([x,y])
   }
 
@@ -130,16 +136,16 @@ class BoardRenderer {
     if (square) {
       square.classList.remove('check');
     }
-    console.log([x,y])
+    // console.log([x,y])
     this.updateSquare([x,y])
   }
 
   clearKings(whiteKing, blackKing){
-    console.log("whiteKing:")
-    console.log(whiteKing)
+    // console.log("whiteKing:")
+    // console.log(whiteKing)
     this.uncheck(whiteKing.x,whiteKing.y)
-    console.log("blackKing:")
-    console.log(blackKing)
+    // console.log("blackKing:")
+    // console.log(blackKing)
     this.uncheck(blackKing.x,blackKing.y)
   }
 

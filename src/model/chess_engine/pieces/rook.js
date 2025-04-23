@@ -2,6 +2,7 @@ class Rook extends Piece{
     constructor(color,x,y){
         super(color,"R",x,y)
         this.fillDirections()
+        this.firstMove = true
     }
 
     fillDirections(){

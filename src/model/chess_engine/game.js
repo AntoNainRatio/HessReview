@@ -2,12 +2,18 @@ class Game{
     constructor(){
         this.Board = new Board()
         this.turn = 'w'
+
         this.whiteKing = null
         this.whitePieces = []
-        this.blackKing = []
+
+        this.blackKing = null
         this.blackPieces = []
+
         this.fillPiecesLists()
         this.initKings()
+
+        this.state = 'p'
+        this.winner = null
         this.history = []
     }
 
@@ -91,8 +97,12 @@ class Game{
         return false
     }
 
-    isCheckMate(color,legalMoves){
-        return this.isInCheck(color) && legalMoves.length == 0
+    isCheckMate(color){
+        return this.isInCheck(color) && this.getAllLegalMoves(color).length == 0
+    }
+
+    isPat(color){
+        return !this.isCheckMate(color) && this.getAllLegalMoves(color).length == 0
     }
 
     deletePieceFromList(piece){
@@ -130,6 +140,12 @@ class Game{
                 }
             }
         }
+        const king = color == 'w' ? this.whiteKing : this.blackKing
+
+        // check for en passant
+        
+        // check for both rocks
+        
         return res;
     }
 
@@ -143,15 +159,14 @@ class Game{
             return false
         }
         const legalMoves = this.getAllLegalMoves(this.turn)
-        if(this.isInCheck(this.turn)){
-            this.turn == 'w' ? this.whiteKing.isCheck = true : this.blackKing.isCheck = true
-        }
-        // console.log(legalMoves.length)
+
+        // if the move selected by the turn player is in legalMoves list
         const isLegal = legalMoves.some(
             (m) => m.piece === piece && m.to[0] === end[0] && m.to[1] === end[1]
           );
         if (isLegal){
-            if (piece instanceof Pawn){
+            // handle first move of pieces that got it
+            if (piece instanceof Pawn || piece instanceof Rook || piece instanceof King){
                 piece.firstMove = false
             }
             const capture = this.Board.getPiece(end)
@@ -163,7 +178,16 @@ class Game{
                 this.turn == 'w' ? this.whiteKing.isCheck = false: this.blackKing.isCheck = false
             }
             this.switchTurn()
-            if (this.isInCheck(this.turn)){
+            if (this.isCheckMate(this.turn)){
+                this.state = 'won'
+                this.winner = this.turn == 'w' ? 'b' : 'w'
+                console.log(`${this.winner} won !!`)
+            }
+            if(this.isPat(this.turn)){
+                console.log('Pat !!!')
+                this.state = 'pat'
+            }
+            if(this.isInCheck(this.turn)){
                 this.turn == 'w' ? this.whiteKing.isCheck = true : this.blackKing.isCheck = true
             }
             return true

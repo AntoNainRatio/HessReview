@@ -2,6 +2,7 @@ class Pawn extends Piece{
     constructor(color,x,y){
         super(color,"P",x,y)
         this.firstMove = true
+        this.canBePEP = false
         this.fillDirections()
     }
 
@@ -59,6 +60,12 @@ class Pawn extends Piece{
                 const target = board.getPiece([x,y])
                 if (target != null && target.color != this.color){
                     res.push([x,y])
+                }
+                const nextToPawn = board.getPiece([x,this.y])
+                if (nextToPawn != null && nextToPawn.color != this.color){
+                    if (nextToPawn instanceof Pawn && nextToPawn.canBePEP){
+                        res.push([x,y])
+                    }
                 }
             }
             else{
