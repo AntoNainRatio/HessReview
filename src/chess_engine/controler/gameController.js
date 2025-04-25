@@ -23,7 +23,28 @@ class GameController{
         }
     }
 
-    handleMove(start,end){
+    promotionPopUp() {
+        return new Promise((resolve) => {
+          const popup = document.getElementById('promotion')
+          popup.classList.remove('hidden')
+      
+          const buttons = popup.querySelectorAll('button[data-piece]')
+          buttons.forEach(button => {
+            button.addEventListener('click', function onClick() {
+              const choice = this.dataset.piece
+              popup.classList.add('hidden')
+      
+              // Nettoyer les listeners
+              buttons.forEach(btn => btn.removeEventListener('click', onClick))
+      
+              resolve(choice)
+            })
+          })
+        })
+      }
+      
+
+    async handleMove(start,end){
         const info = this.game.movePiece(start,end)
         if (info.isOk){
             this.boardRenderer.updateSquare(info.from)
@@ -35,6 +56,36 @@ class GameController{
             if (info.roque != null){
                 this.boardRenderer.updateSquare(info.roque[0])
                 this.boardRenderer.updateSquare(info.roque[1])
+            }
+
+            if (info.promotion){
+                // get user choice from promotion
+                console.log("Promotion detected !")
+
+                const pieceName = await this.promotionPopUp()
+
+                let c;
+                switch(pieceName){
+                    case "queen":
+                        c = new Queen('w',-1,-1)
+                        break;
+                    case "rook":
+                        c = new Rook('w',-1,-1)
+                        break;
+                    case "knight":
+                        c = new Knight('w',-1,-1)
+                        break;
+                    case "bishop":
+                        c = new Bishop('w',-1,-1)
+                        break;
+                    default:
+                        console.error("Invalid choice on promotion")
+                        break;
+                }
+
+                this.game.putPiece(end,c)
+
+                this.boardRenderer.updateSquare(info.to)
             }
 
             this.boardRenderer.clearKings(this.game.whiteKing,this.game.blackKing)

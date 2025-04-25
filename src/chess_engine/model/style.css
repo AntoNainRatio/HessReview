@@ -22,13 +22,7 @@
     background-color: darkcyan;
 }
 
-.whitePiece{
-    fill: rgb(218, 218, 218);
-}
 
-.blackPiece{
-    fill: rgb(34, 34, 34);
-}
 
 .coord{
     font-size: 60%;
@@ -75,9 +69,48 @@
 }
 
 .highlight {
-    background-color: yellowgreen;
+    background-color: rgba(82, 189, 40, 0.616);
   }
 
 .check{
     background-color: darkred;
 }
+
+.whitePiece{
+    fill: rgb(218, 218, 218);
+}
+
+.blackPiece{
+    fill: rgb(34, 34, 34);
+}
+
+.popup {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+  }
+  
+  .popup-content {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+  }
+  
+  .piece-choices button {
+    margin: 10px;
+    padding: 10px 20px;
+    font-size: 18px;
+    cursor: pointer;
+  }
+  
+  .hidden {
+    display: none;
+  }

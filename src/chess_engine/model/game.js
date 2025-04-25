@@ -109,12 +109,12 @@ class Game{
         if (i !== -1) {
             list.splice(i, 1);
         }
-      }
+    }
 
     addPieceFromList(piece){
         const list = piece.color === 'w' ? this.whitePieces : this.blackPieces;
         list.push(piece)
-      }
+    }
 
     switchTurn(){
         this.moveId += 1
@@ -216,6 +216,7 @@ class Game{
             to: end,
             PEPCapture: null,
             roque: null,
+            promotion: null
 
         }
         const piece = this.Board.getPiece(start);
@@ -240,6 +241,10 @@ class Game{
 
             if(piece instanceof Pawn && Math.abs(end[1] - start[1]) == 2){
                 piece.canBePEP = this.moveId
+            }
+
+            if (piece instanceof Pawn && (end[1] == 0 || end[1] == 7)){
+                res.promotion = true;
             }
             let capture = this.Board.getPiece(end)
             
@@ -310,5 +315,20 @@ class Game{
         }
         
         return res
+    }
+
+    putPiece(pos,piece){
+        const old = this.Board.board[pos[1]][pos[0]]
+        piece.x = old.x
+        piece.y = old.y
+        piece.color = old.color
+        this.deletePieceFromList(old)
+        if (piece.color == 'w'){
+            this.whitePieces.push(piece)
+        }
+        else{
+            this.blackPieces.push(piece)
+        }
+        this.Board.board[pos[1]][pos[0]] = piece
     }
 }
