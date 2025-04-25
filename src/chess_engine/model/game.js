@@ -15,6 +15,7 @@ class Game{
         this.state = 'p'
         this.winner = null
         this.history = []
+        this.moveId = 1
     }
 
     initKings(){
@@ -85,12 +86,9 @@ class Game{
         const king = color == 'w' ? this.whiteKing : this.blackKing
         const king_pos = [king.x,king.y]
 
-        // console.log(king_pos)
         const attacker = color == 'w' ? this.blackPieces : this.whitePieces
         for(let i = 0; i < attacker.length; i++){
             if (attacker[i].canMove([attacker[i].x,attacker[i].y],king_pos,this.Board)){
-                // console.log("attacker :")
-                // console.log(attacker[i])
                 return true
             } 
         }
@@ -119,21 +117,85 @@ class Game{
       }
 
     switchTurn(){
+        this.moveId += 1
         if (this.turn == 'w'){
             this.turn = 'b'
         }
         else{
             this.turn = 'w'
         }
+    }
 
-        // console.log(`${this.turn} turn`)
+    verifyRoque(pos1,pos2,color){
+        // function to verifiy if rook thos two pos is valid
+        // return the move in x coord of the king: diff_x * 2 if true
+        //                                         0 otherwise
+        const start_x = pos1[0]
+        const start_y = pos1[1]
+        const end_x = pos2[0]
+        const end_y = pos2[1]
+
+        const diff_x = end_x - start_x > 0 ? 1 : -1;
+        let curr = start_x + diff_x;
+        while (curr != end_x){
+
+            // console.log([curr,start_y])
+            if(this.Board.getPiece([curr,start_y]) != null){
+                return 0
+            }
+            if(Math.abs(curr - start_x) <= 2 && this.isInCheck(color)){
+                return 0
+            }
+            curr += diff_x;
+        }
+
+        return diff_x*2
+    }
+
+    checkForRoques(king,rook1,rook2,moves){
+        if(king.isCheck){
+            return
+        }
+        // console.log(king.color)
+        if (rook1 != null && king.firstMove && rook1.firstMove){
+            if(king.y == rook1.y){
+                const pos1 = [king.x,king.y]
+                const pos2 = [rook1.x,rook1.y]
+                const diff_x = this.verifyRoque(pos1,pos2,king.color)
+                if (diff_x != 0){
+                    moves.push({piece: king, to: [king.x+diff_x,king.y]})
+                }
+            }
+        }
+
+        if (rook2 != null && king.firstMove && rook2.firstMove){
+            if(king.y == rook2.y){
+                const pos1 = [king.x,king.y]
+                const pos2 = [rook2.x,rook2.y]
+
+                const diff_x = this.verifyRoque(pos1,pos2,king.color)
+                if (diff_x != 0){
+                    moves.push({piece: king, to: [king.x+diff_x,king.y]})
+                }
+            }
+        }
     }
 
     getAllLegalMoves(color){
         const pieces = color == 'w' ? this.whitePieces : this.blackPieces;
+        let rook1 = null
+        let rook2 = null
         const res = []
         for (const piece of pieces){
-            const moves = piece.getPossibleMoves(this.Board)
+            if (piece instanceof Rook){
+                if(rook1 == null){
+                    rook1 = piece
+                }
+                else{
+                    rook2 = piece
+                }
+            }
+            const moves = piece.getPossibleMoves(this.Board,this.moveId)
             for (const move of moves){
                 if (!this.putKingInCheck(piece,move)){
                     res.push({piece, to: move})
@@ -141,22 +203,28 @@ class Game{
             }
         }
         const king = color == 'w' ? this.whiteKing : this.blackKing
-
-        // check for en passant
         
-        // check for both rocks
+        this.checkForRoques(king,rook1,rook2,res)
         
         return res;
     }
 
     movePiece(start,end){
+        var res = {
+            isOk: false,
+            from: start,
+            to: end,
+            PEPCapture: null,
+            roque: null,
+
+        }
         const piece = this.Board.getPiece(start);
         if(piece.color != this.turn){
-            return false
+            return res
         }
         const dest = this.Board.getPiece(end)
         if (dest != null && piece.color == dest.color){
-            return false
+            return res
         }
         const legalMoves = this.getAllLegalMoves(this.turn)
 
@@ -171,24 +239,54 @@ class Game{
             }
 
             if(piece instanceof Pawn && Math.abs(end[1] - start[1]) == 2){
-                console.log("canBePEP -> true")
-                piece.canBePEP = true
+                piece.canBePEP = this.moveId
             }
             let capture = this.Board.getPiece(end)
             
+            let diff_x = end[0]-start[0];
+
             if (capture != null){
                 this.deletePieceFromList(capture)
             }
-            else if (piece instanceof Pawn && Math.abs(end[0]-start[0]) != 0){
+
+            // handling Prise en passant
+            else if (piece instanceof Pawn && Math.abs(diff_x) != 0){
                 capture = this.Board.getPiece([end[0],start[1]])
-                this.Board.board[start[1]][end[0]] = null
                 if(capture != null){
-                    console.log("PEP: piece deleted")
+                    this.Board.board[start[1]][end[0]] = null
+                    res.PEPCapture = [end[0],start[1]]
                     this.deletePieceFromList(capture)
                 }
                 else{
-                    console.log("PEP: piece not found")
+                    console.log("Undefined behavior: PEP capture missing")
                 }
+            }
+            else if (piece instanceof King && Math.abs(diff_x) == 2){
+                let fromR = [-1,-1];
+                let toR = [-1,-1];
+
+                let dir = diff_x > 0 ? 1: -1
+
+                let curr_x = end[0] + dir;
+                while (this.Board.isOnBoard([curr_x,end[1]]) && this.Board.getPiece([curr_x,end[1]]) == null){
+                    curr_x += dir;
+                }
+                fromR[0] = curr_x;
+                fromR[1] = end[1];
+
+                toR[0] = end[0]-dir
+                toR[1] = end[1]
+
+                // updating info to inform controller that it's a roque move by telling the [from,two] of the rook
+                res.roque = [fromR,toR]
+
+                // moving rook
+                this.Board.board[toR[1]][toR[0]] = this.Board.board[fromR[1]][fromR[0]]
+                this.Board.board[fromR[1]][fromR[0]] = null
+
+                // updating piece coordinates
+                this.Board.board[toR[1]][toR[0]].x = toR[0]
+                this.Board.board[toR[1]][toR[0]].y = toR[1]
             }
             this.Board.move(start,end)
             if (!this.isInCheck(this.turn)){
@@ -207,9 +305,10 @@ class Game{
             if(this.isInCheck(this.turn)){
                 this.turn == 'w' ? this.whiteKing.isCheck = true : this.blackKing.isCheck = true
             }
-            return true
+            res.isOk = true;
+            return res
         }
         
-        return false
+        return res
     }
 }

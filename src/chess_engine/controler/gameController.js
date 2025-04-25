@@ -24,20 +24,29 @@ class GameController{
     }
 
     handleMove(start,end){
-        const isMoveOk = this.game.movePiece(start,end)
-        if (isMoveOk){
-            this.boardRenderer.updateSquare(end)
-            
-            // console.log(this.game.whiteKing)
-            // console.log(this.game.blackKing)
+        const info = this.game.movePiece(start,end)
+        if (info.isOk){
+            this.boardRenderer.updateSquare(info.from)
+
+            if (info.PEPCapture != null){
+                this.boardRenderer.updateSquare(info.PEPCapture)
+            }
+
+            if (info.roque != null){
+                this.boardRenderer.updateSquare(info.roque[0])
+                this.boardRenderer.updateSquare(info.roque[1])
+            }
+
             this.boardRenderer.clearKings(this.game.whiteKing,this.game.blackKing)
+
             const checkPos = this.game.getCheckedKingPos()
             if (checkPos){
                 this.boardRenderer.check(checkPos[0],checkPos[1])
             }
         }
         this.boardRenderer.clearHighlight(this.selected[0],this.selected[1])
-        this.boardRenderer.updateSquare(this.selected)
+        this.boardRenderer.updateSquare(info.to)
+        
         this.selected = null;
     }
 }

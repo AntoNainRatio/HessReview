@@ -2,7 +2,7 @@ class Pawn extends Piece{
     constructor(color,x,y){
         super(color,"P",x,y)
         this.firstMove = true
-        this.canBePEP = false
+        this.canBePEP = -2
         this.fillDirections()
     }
 
@@ -46,7 +46,7 @@ class Pawn extends Piece{
         }
     }
 
-    getPossibleMoves(board){
+    getPossibleMoves(board,turnId){
         let res = []
         for(let i = 0; i < this.directions.length; i++){
             // console.log(this.directions[i])
@@ -63,7 +63,7 @@ class Pawn extends Piece{
                 }
                 const nextToPawn = board.getPiece([x,this.y])
                 if (nextToPawn != null && nextToPawn.color != this.color){
-                    if (nextToPawn instanceof Pawn && nextToPawn.canBePEP){
+                    if (nextToPawn instanceof Pawn && nextToPawn.canBePEP + 1 == turnId){
                         res.push([x,y])
                     }
                 }
