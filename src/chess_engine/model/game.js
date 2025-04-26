@@ -16,6 +16,9 @@ class Game{
         this.winner = null
         this.history = []
         this.moveId = 1
+
+        this.whitesMoves = this.getAllLegalMoves('w')
+        this.blackMoves = null
     }
 
     initKings(){
@@ -120,10 +123,13 @@ class Game{
         this.moveId += 1
         if (this.turn == 'w'){
             this.turn = 'b'
+            this.blackMoves = this.getAllLegalMoves(this.turn)
         }
         else{
             this.turn = 'w'
+            this.whitesMoves = this.getAllLegalMoves(this.turn)
         }
+
     }
 
     verifyRoque(pos1,pos2,color){
@@ -212,6 +218,7 @@ class Game{
     movePiece(start,end){
         var res = {
             isOk: false,
+            piece: null,
             from: start,
             to: end,
             PEPCapture: null,
@@ -220,6 +227,7 @@ class Game{
 
         }
         const piece = this.Board.getPiece(start);
+        res.piece = piece
         if(piece.color != this.turn){
             return res
         }
@@ -227,7 +235,7 @@ class Game{
         if (dest != null && piece.color == dest.color){
             return res
         }
-        const legalMoves = this.getAllLegalMoves(this.turn)
+        const legalMoves = piece.color == 'w' ? this.whitesMoves : this.blackMoves
 
         // if the move selected by the turn player is in legalMoves list
         const isLegal = legalMoves.some(

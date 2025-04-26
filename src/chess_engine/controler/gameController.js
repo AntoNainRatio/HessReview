@@ -23,13 +23,19 @@ class GameController{
         }
     }
 
-    promotionPopUp() {
+    promotionPopUp(color) {
         return new Promise((resolve) => {
           const popup = document.getElementById('promotion')
           popup.classList.remove('hidden')
       
           const buttons = popup.querySelectorAll('button[data-piece]')
           buttons.forEach(button => {
+
+            const pieceName = button.attributes.getNamedItem('data-piece')
+            
+            const imagePath = 'img/chesspieces/'+color+pieceName.value+'.png'
+            button.childNodes[0].src = imagePath
+
             button.addEventListener('click', function onClick() {
               const choice = this.dataset.piece
               popup.classList.add('hidden')
@@ -41,8 +47,7 @@ class GameController{
             })
           })
         })
-      }
-      
+    }  
 
     async handleMove(start,end){
         const info = this.game.movePiece(start,end)
@@ -60,22 +65,20 @@ class GameController{
 
             if (info.promotion){
                 // get user choice from promotion
-                console.log("Promotion detected !")
-
-                const pieceName = await this.promotionPopUp()
+                const pieceName = await this.promotionPopUp(info.piece.color)
 
                 let c;
                 switch(pieceName){
-                    case "queen":
+                    case "Q":
                         c = new Queen('w',-1,-1)
                         break;
-                    case "rook":
+                    case "R":
                         c = new Rook('w',-1,-1)
                         break;
-                    case "knight":
+                    case "N":
                         c = new Knight('w',-1,-1)
                         break;
-                    case "bishop":
+                    case "B":
                         c = new Bishop('w',-1,-1)
                         break;
                     default:
