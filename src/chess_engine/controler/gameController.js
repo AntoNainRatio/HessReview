@@ -5,7 +5,6 @@ class GameController{
         this.selected = null;
 
         this.boardRenderer.setClickHandler(this.onClick.bind(this))
-
         this.boardRenderer.render();
     }
 
