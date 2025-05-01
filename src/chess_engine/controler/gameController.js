@@ -3,6 +3,7 @@ class GameController{
         this.game = game;
         this.boardRenderer = boardRenderer;
         this.selected = null;
+        this.moves = null;
 
         this.boardRenderer.setClickHandler(this.onClick.bind(this))
         this.boardRenderer.render();
@@ -11,14 +12,22 @@ class GameController{
     onClick(pos){
         if(this.selected != null){
             this.handleMove(this.selected,[pos.x,pos.y])
+            this.selected = null
+            this.boardRenderer.resetMoves(this.moves)
         }
         else if(this.game.Board.getPiece([pos.x,pos.y]) != null){
-            this.boardRenderer.highlight(pos.x,pos.y)
-            this.boardRenderer.updateSquare([pos.x,pos.y])
-            this.selected = [pos.x,pos.y]
+            if (this.game.canBeSelected([pos.x,pos.y])){
+                this.boardRenderer.highlight(pos.x,pos.y)
+                this.boardRenderer.updateSquare([pos.x,pos.y])
+                this.selected = [pos.x,pos.y]
+                const moves = this.game.getMovesOfPiece(this.selected)
+                this.boardRenderer.displayMoves(moves);
+                this.moves = moves;
+            }
         }
         else{
             this.selected = null
+            this.boardRenderer.resetMoves(this.moves)
         }
     }
 
@@ -99,7 +108,5 @@ class GameController{
         }
         this.boardRenderer.clearHighlight(this.selected[0],this.selected[1])
         this.boardRenderer.updateSquare(info.to)
-        
-        this.selected = null;
     }
 }

@@ -149,6 +149,28 @@ class BoardRenderer {
     this.uncheck(blackKing.x,blackKing.y)
   }
 
+  displayMoves(positions){
+    for (const pos of positions){
+      const id = pos[1] * 8 + pos[0];
+      const square = document.querySelector(`[square-id="${id}"]`);
+      if (square){
+        square.classList.add('possible')
+        this.updateSquare(pos)
+      }
+    }
+  }
+
+  resetMoves(positions){
+    for (const pos of positions){
+      const id = pos[1] * 8 + pos[0];
+      const square = document.querySelector(`[square-id="${id}"]`);
+      if (square){
+        square.classList.remove('possible')
+        this.updateSquare(pos)
+      }
+    }
+  }
+
   setClickHandler(callback){
     this.boardElement.addEventListener('click', (e) => {
       const target = e.target.closest('.square')

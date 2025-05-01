@@ -339,4 +339,22 @@ class Game{
         }
         this.Board.board[pos[1]][pos[0]] = piece
     }
+
+    canBeSelected(pos){
+        const piece = this.Board.getPiece(pos)
+        return piece.color === this.turn;
+    }
+
+    getMovesOfPiece(pos){
+        const res = [];
+        const legalMoves = this.turn === "w" ? this.whitesMoves: this.blackMoves;
+        const x = pos[0];
+        const y = pos[1];
+        for(const m of legalMoves){
+            if (m.piece.x === x && m.piece.y === y){
+                res.push(m.to)
+            }
+        }
+        return res;
+    }
 }
