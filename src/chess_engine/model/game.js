@@ -21,6 +21,26 @@ class Game{
         this.blackMoves = null
     }
 
+    initGame() {
+        this.Board = new board.emptyBoard()
+        this.turn = 'w';
+
+        this.whiteKing = null
+        this.whitePieces = []
+
+        this.blackKing = null
+        this.blackPieces = []
+
+        this.state = 'p'
+        this.winner = null
+        this.history = []
+        this.moveId = 1
+
+        this.whitesMoves = null;
+        this.blackMoves = null;
+        return this
+    }
+
     initKings(){
         this.whiteKing = this.whitePieces[6]
         this.blackKing = this.blackPieces[6]

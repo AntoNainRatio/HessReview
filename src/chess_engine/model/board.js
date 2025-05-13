@@ -26,6 +26,20 @@ class Board{
         return res;
     }
 
+    emptyBoard() {
+        const height = 8;
+        const width = 8;
+        let res = []
+        for(let i = 0; i < height; i++){
+            let tmp = []
+            for(let j = 0; j < width; j++){
+                tmp.push(null)
+            }
+            this.board.push(tmp)
+        }
+        return res;
+    }
+
     create(){
         const height = 8;
         const width = 8;
