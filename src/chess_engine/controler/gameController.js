@@ -9,9 +9,9 @@ class GameController{
         this.boardRenderer.render();
     }
 
-    onClick(pos){
+    async onClick(pos){
         if(this.selected != null){
-            this.handleMove(this.selected,[pos.x,pos.y])
+            await this.handleMove(this.selected,[pos.x,pos.y])
             this.selected = null
             this.boardRenderer.resetMoves(this.moves)
         }
@@ -97,6 +97,8 @@ class GameController{
                 this.game.putPiece(end,c)
 
                 this.boardRenderer.updateSquare(info.to)
+
+                // update check for king here
             }
 
             this.boardRenderer.clearKings(this.game.whiteKing,this.game.blackKing)
