@@ -377,6 +377,7 @@ class Game{
                 this.turn == 'w' ? this.whiteKing.isCheck = true : this.blackKing.isCheck = true
             }
             res.isOk = true;
+            this.history.push({start,end});
             return res
         }
         
