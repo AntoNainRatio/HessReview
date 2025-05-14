@@ -99,6 +99,7 @@ class GameController{
                 this.boardRenderer.updateSquare(info.to)
 
                 // update check for king here
+                this.game.checksAfterPromo();
             }
 
             this.boardRenderer.clearKings(this.game.whiteKing,this.game.blackKing)

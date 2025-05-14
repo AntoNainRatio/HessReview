@@ -207,6 +207,44 @@ class Game{
         }
     }
 
+    checksAfterPromo(){
+        const defender = this.turn;
+        // console.log(`turn: ${this.turn}`)
+        // console.log("nooooooooooooon")
+        // if(defender === 'w'){
+        //     console.log(this.whitePieces);
+        // }
+        // else{
+        //     console.log(this.blackPieces);
+        // }
+
+        if(defender === 'w'){
+            this.whitesMoves = this.getAllLegalMoves(this.turn);
+        }
+        else{
+            this.blackMoves = this.getAllLegalMoves(this.turn);
+        }
+        if (this.isInCheck(defender)){
+            // console.log("ouiiiii")
+            if(defender === 'w'){
+                this.whiteKing.isCheck = true;
+            }
+            else{
+                this.blackKing.isCheck = true;
+
+            }
+        }
+        if (this.isCheckMate(defender)){
+            this.state = 'won'
+            this.winner = this.turn == 'w' ? 'b' : 'w'
+            console.log(`${this.winner} won !!`)
+        }
+        if(this.isPat(defender)){
+            console.log('Pat !!!')
+            this.state = 'pat'
+        }
+    }
+
     getAllLegalMoves(color){
         const pieces = color == 'w' ? this.whitePieces : this.blackPieces;
         let rook1 = null
