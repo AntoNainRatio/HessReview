@@ -11,9 +11,25 @@ class GameController{
 
     async onClick(pos){
         if(this.selected != null){
-            await this.handleMove(this.selected,[pos.x,pos.y])
-            this.selected = null
-            this.boardRenderer.resetMoves(this.moves)
+            if (this.game.canBeSelected([pos.x,pos.y])){
+                // undisplay prec piece moves and selection
+                this.boardRenderer.clearHighlight(this.selected[0],this.selected[1])
+                this.boardRenderer.updateSquare(this.selected)
+                this.boardRenderer.resetMoves(this.moves)
+                
+                // setting new piece moves and highlight
+                this.boardRenderer.highlight(pos.x,pos.y)
+                this.boardRenderer.updateSquare([pos.x,pos.y])
+                this.selected = [pos.x,pos.y]
+                const moves = this.game.getMovesOfPiece(this.selected)
+                this.boardRenderer.displayMoves(moves);
+                this.moves = moves;
+            }
+            else{
+                await this.handleMove(this.selected,[pos.x,pos.y])
+                this.selected = null
+                this.boardRenderer.resetMoves(this.moves)
+            }
         }
         else if(this.game.Board.getPiece([pos.x,pos.y]) != null){
             if (this.game.canBeSelected([pos.x,pos.y])){

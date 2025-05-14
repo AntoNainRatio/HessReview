@@ -400,7 +400,7 @@ class Game{
 
     canBeSelected(pos){
         const piece = this.Board.getPiece(pos)
-        return piece.color === this.turn;
+        return piece !== null && piece.color === this.turn;
     }
 
     getMovesOfPiece(pos){
