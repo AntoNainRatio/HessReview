@@ -98,11 +98,16 @@ function parseBoard(input,game){
             if (p === null){
                 return null;
             }
-            // manage king to init game.whiteKing and game.blackKing
             if (p.color === 'w'){
+                if (p instanceof King){
+                    game.whiteKing = p;
+                }
                 game.whitePieces.push(p);
             }
             else{
+                if (p instanceof King){
+                    game.blackKing = p;
+                }
                 game.blackPieces.push(p);
             }
             b.putPiece(x,y,p);
