@@ -9,9 +9,50 @@ function parseFen(input){
         return null;
     }
     i = parseTurn(input,i,res);
-    console.log(`turn: ${res.turn}`)
+    i = parseRook(input,i,res);
     //
     return res;
+}
+
+function parseRook(input,i,game){
+    if (i < input.length && input[i] === '-'){
+        //no rook for both players
+
+        return i+1;
+    }
+    if (i < input.length && input[i] === 'K'){
+        const r = game.Board.getPiece([0,0]);
+        if (r !== null){
+            r.firstMove = true;
+        }
+        game.Board.board[0][0] = r;
+        i+=1;
+    }
+    if (i < input.length && input[i] === 'Q'){
+        const r = game.Board.getPiece([7,0]);
+        if (r !== null){
+            r.firstMove = true;
+        }
+        game.Board.board[0][7] = r;
+        i += 1;
+    }
+    if (i < input.length && input[i] === 'k'){
+        const r = game.Board.getPiece([0,7]);
+        if (r !== null){
+            r.firstMove = true;
+        }
+        game.Board.board[7][0] = r;
+        i+=1;
+    }
+    if (i < input.length && input[i] === 'q'){
+        const r = game.Board.getPiece([7,7]);
+        if (r !== null){
+            r.firstMove = true;
+        }
+        game.Board.board[7][7] = r;
+        i += 1;
+    }
+    return i;
 }
 
 function parseTurn(input,i,game){
@@ -38,13 +79,16 @@ function parseTurn(input,i,game){
 
 function parsePiece(c,x,y){
     if (c === 'K'){
-        return new King('w',x,y);
+        const k = new King('w',x,y);
+        return k;
     }
     else if (c === 'Q'){
         return new Queen('w',x,y);
     }
     else if (c === 'R'){
-        return new Rook('w',x,y);
+        const r = new Rook('w',x,y);
+        r.firstMove = false;
+        return r;
     }
     else if (c === 'B'){
         return new Bishop('w',x,y);
@@ -53,16 +97,23 @@ function parsePiece(c,x,y){
         return new Knight('w',x,y);
     }
     else if (c === 'P'){
-        return new Pawn('w',x,y);
+        const p =  new Pawn('w',x,y);
+        if (y !== 1){
+            p.firstMove = false;
+        }
+        return p;
     }
     else if (c === 'k'){
-        return new King('b',x,y);
+        const k = new King('b',x,y);
+        return k;
     }
     else if (c === 'q'){
         return new Queen('b',x,y);
     }
     else if (c === 'r'){
-        return new Rook('b',x,y);
+        const r = new Rook('b',x,y);
+        r.firstMove = false;
+        return r;
     }
     else if (c === 'b'){
         return new Bishop('b',x,y);
@@ -71,7 +122,11 @@ function parsePiece(c,x,y){
         return new Knight('b',x,y);
     }
     else if (c === 'p'){
-        return new Pawn('b',x,y);
+        const p = new Pawn('b',x,y);
+        if (y !== 6){
+            p.firstMove = false;
+        }
+        return p;
     }
     else{
         return null;
