@@ -22,7 +22,7 @@ class Game{
     }
 
     initGame() {
-        this.Board = new board.emptyBoard()
+        this.Board.emptyBoard();
         this.turn = 'w';
 
         this.whiteKing = null

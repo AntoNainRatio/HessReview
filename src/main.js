@@ -18,7 +18,8 @@ fen_button.addEventListener("click", () => {
         fen_error.innerHTML = "Invalid FEN";
     }
     else{
-        fen_error.innerHTML = ""
+        fen_error.innerHTML = "";
+        renderer.render()
     }
     // game = parse function
 })

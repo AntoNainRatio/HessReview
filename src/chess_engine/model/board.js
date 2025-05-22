@@ -29,7 +29,7 @@ class Board{
     emptyBoard() {
         const height = 8;
         const width = 8;
-        let res = []
+        this.board = [];
         for(let i = 0; i < height; i++){
             let tmp = []
             for(let j = 0; j < width; j++){
@@ -37,7 +37,6 @@ class Board{
             }
             this.board.push(tmp)
         }
-        return res;
     }
 
     create(){
@@ -64,6 +63,10 @@ class Board{
     getPiece(coords){
         // coords: [x,y]
         return this.board[coords[1]][coords[0]]
+    }
+
+    putPiece(x,y,p){
+        this.board[y][x] = p;
     }
 
     move(start,end){
