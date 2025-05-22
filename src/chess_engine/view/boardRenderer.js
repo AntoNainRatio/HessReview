@@ -41,6 +41,35 @@ class BoardRenderer {
     }
   }
 
+  updateAllSquares(){
+    const squares = this.boardElement.childNodes;
+    // console.log(this.board);
+    for(let y = 0; y < 8; y++){
+      for(let x = 0; x < 8; x++){
+        const square_id = y * 8 + x;
+        const square = squares[square_id];
+        const oldPiece = square.querySelector('.piece');
+
+        if (oldPiece){
+          square.removeChild(oldPiece)
+        }
+        const newPiece = this.board.getPiece([x,y])
+        // console.log(newPiece)
+        if (newPiece)
+        {
+          const img = document.createElement('img')
+          img.classList.add('piece')
+          img.src = newPiece.getImagePath()
+          square.appendChild(img)
+        }
+        else if(square.classList.contains('check')){ 
+          // if no piece in square and contains 'check' -> remove check
+          square.classList.remove('check')
+        }
+      }
+    }
+  }
+
   render() {
     const height = 8;
       const width = 8;

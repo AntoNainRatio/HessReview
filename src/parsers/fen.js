@@ -4,10 +4,36 @@ function parseFen(input){
     }
     const res = new Game();
     res.initGame();
-    parseBoard(input,res);
-    // console.log(b);
-    res.Board = b;
+    let i = parseBoard(input,res);
+    if (i === null){
+        return null;
+    }
+    i = parseTurn(input,i,res);
+    console.log(`turn: ${res.turn}`)
+    //
     return res;
+}
+
+function parseTurn(input,i,game){
+    if (i < input.length && input[i] !== ' '){
+        return null;
+    }
+    i += 1;
+    if (i < input.length && input[i] === 'w'){
+        game.turn = 'w';
+    }
+    else if (i < input.length && input[i] === 'b'){
+        game.turn = 'b';
+    }
+    else{
+        return null;
+    }
+    game.initLegalMoves();
+    i+=1;
+    if (i < input.length && input[i] !== ' '){
+        return null;
+    }
+    return i+1;
 }
 
 function parsePiece(c,x,y){
@@ -55,29 +81,38 @@ function parsePiece(c,x,y){
 function parseBoard(input,game){
     let b = new Board();
     b.emptyBoard();
-    let x = 0;
-    let y = 0;
-    for (let i = 0; i < input.length; i++){
+    let x = 7;
+    let y = 7;
+    let i = 0;
+    while(input[i] !== ' '){
         const c = input[i];
         if ('1' <= c && c <= '8'){
-            x += (c - '0');
+            x -= (c - '0');
         }
         else if (c === '/'){
-            x = 0;
-            y += 1;
+            x = 7;
+            y -= 1;
         }
         else{
             const p = parsePiece(c,x,y);
             if (p === null){
                 return null;
             }
+            // manage king to init game.whiteKing and game.blackKing
+            if (p.color === 'w'){
+                game.whitePieces.push(p);
+            }
+            else{
+                game.blackPieces.push(p);
+            }
             b.putPiece(x,y,p);
-            x+=1;
+            x-=1;
         }
-
-        if (x === 7 && y === 7){
-            game.Board = b;
-        }
+        i++;
+    }
+    if (x === -1 && y === 0){
+        game.Board = b;
+        return i;
     }
     return null;
 }

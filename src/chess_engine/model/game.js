@@ -152,6 +152,15 @@ class Game{
 
     }
 
+    initLegalMoves(){
+        if (this.turn == 'b'){
+            this.blackMoves = this.getAllLegalMoves(this.turn)
+        }
+        else{
+            this.whitesMoves = this.getAllLegalMoves(this.turn)
+        }
+    }
+
     verifyRoque(pos1,pos2,color){
         // function to verifiy if rook thos two pos is valid
         // return the move in x coord of the king: diff_x * 2 if true
