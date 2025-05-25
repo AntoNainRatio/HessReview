@@ -9,16 +9,67 @@ function parseFen(input){
         return null;
     }
     i = parseTurn(input,i,res);
+    if (i === null){
+        return null;
+    }
     i = parseRook(input,i,res);
-    //
+    if (i === null){
+        return null;
+    }
+    i = parsePEP(input,i,res);
+    if (i === null){
+        return null;
+    }
     return res;
+}
+
+function parsePEP(input,i,game){
+    if (i < input.length){
+        if (input[i] === '-'){
+            return i+2;
+        }
+        else{
+            console.log(input[i])
+            const x = 7 - (input[i].charCodeAt(0)-'a'.charCodeAt(0));
+            console.log(`x: ${x}`);
+            i += 1;
+            if (i >= input.length){
+                return null;
+            }
+            console.log(input[i])
+            let y = input[i]-'1';
+            console.log(`y: ${y}`);
+            if (y === 2){
+                y = 3;
+            }
+            else if (y === 5){
+                y = 4;
+            }
+            console.log(`newY: ${y}`);
+            console.log(game.Board.board)
+            const p = game.Board.getPiece([x,y]);
+            console.log(p)
+            if (p === null || !(p instanceof Pawn)){
+                console.log('ici')
+                return null;
+            }
+            else {
+                p.canBePEP = true;
+                game.Board.board[y][x] = p;
+                return i + 2;
+            }
+        }
+    }
+    else {
+        return null;
+    }
 }
 
 function parseRook(input,i,game){
     if (i < input.length && input[i] === '-'){
         //no rook for both players
 
-        return i+1;
+        return i+2;
     }
     if (i < input.length && input[i] === 'K'){
         const r = game.Board.getPiece([0,0]);
@@ -52,7 +103,7 @@ function parseRook(input,i,game){
         game.Board.board[7][7] = r;
         i += 1;
     }
-    return i;
+    return i + 1;
 }
 
 function parseTurn(input,i,game){
