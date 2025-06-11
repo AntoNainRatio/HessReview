@@ -2,6 +2,7 @@ class Board{
     constructor(){
         this.board = []
         this.create()
+        this.flip = false
     }
 
     createSupPieceList(color,y){

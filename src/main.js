@@ -3,6 +3,7 @@ const boardElement = document.getElementById(id)
 const fen_input = document.getElementById("FEN_input")
 const fen_button = document.getElementById("FEN_button")
 const fen_error = document.getElementById("FEN_error")
+const flip_button = document.getElementById("flip_button")
 
 let game = new Game()
 
@@ -24,4 +25,8 @@ fen_button.addEventListener("click", () => {
         renderer.updateAllSquares();
     }
     // game = parse function
+})
+
+flip_button.addEventListener("click", () => {
+    renderer.flipBoard()
 })

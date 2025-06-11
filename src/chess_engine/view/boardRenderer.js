@@ -101,7 +101,7 @@ class BoardRenderer {
               else{
                   square.classList.add('black_square')
               }
-              if (i == 7){
+              if (i == 7 || i == 0){
                   const col_id = document.createElement('div')
                   col_id.classList.add('col_id')
                   col_id.classList.add('coord')
@@ -111,10 +111,13 @@ class BoardRenderer {
                   else{
                       col_id.classList.add('whiteWrited')
                   }
+                  if (i == 0){
+                    col_id.classList.add("flip_coord")
+                  }
                   col_id.innerText = cols[j]
                   square.appendChild(col_id)
               }
-              if (j == 0){
+              if (j == 0 || j == 7){
                   const row_id = document.createElement('div')
                   row_id.classList.add('row_id')
                   row_id.classList.add('coord')
@@ -123,6 +126,9 @@ class BoardRenderer {
                   }
                   else{
                       row_id.classList.add('whiteWrited')
+                  }
+                  if (j == 7){
+                    row_id.classList.add("flip_coord")
                   }
                   row_id.innerText = rows[i]
                   square.appendChild(row_id)
@@ -208,5 +214,40 @@ class BoardRenderer {
       const y = parseInt(target.dataset.y)
       callback({ x, y })
     })
+  }
+
+  flipCoord(){
+    const squares = this.boardElement.childNodes;
+    // console.log(this.board);
+    for(let y = 0; y < 8; y++){
+      for(let x = 0; x < 8; x++){
+        const square_id = y * 8 + x;
+        const square = squares[square_id];
+        const col = square.querySelector('.col_id')
+        const row = square.querySelector('.row_id')
+
+        if (row !== null){
+          if(row.classList.contains("flip_coord")){
+            row.classList.remove("flip_coord");
+          }
+          else {
+            row.classList.add("flip_coord");
+          }
+        }
+        if (col !== null) {
+          if(col.classList.contains("flip_coord")){
+            col.classList.remove("flip_coord");
+          }
+          else {
+            col.classList.add("flip_coord");
+          }
+        }
+      }
+    }
+  }
+
+  flipBoard(){
+    this.board.flip = true
+    this.flipCoord()
   }
 }
