@@ -246,8 +246,17 @@ class BoardRenderer {
     }
   }
 
+  reverseBoard(){
+    const squares = Array.from(this.boardElement.childNodes);
+    this.boardElement.innerHTML = '';
+    for (let i = squares.length - 1; i >= 0; i--){
+      this.boardElement.appendChild(squares[i]);
+    }
+  }
+
   flipBoard(){
-    this.board.flip = true
-    this.flipCoord()
+    this.board.flip = true;
+    this.flipCoord();
+    this.reverseBoard();
   }
 }
