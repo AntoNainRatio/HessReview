@@ -19,7 +19,10 @@ class BoardRenderer {
     const y = coords[1]
 
     // get square representing coords
-    const square_id = y * 8 + x;
+    let square_id = y * 8 + x;
+    if (this.board.flip){
+      square_id = 63-square_id;
+    }
     const square = this.boardElement.childNodes[square_id];
 
     const oldPiece = square.querySelector('.piece');
@@ -196,12 +199,14 @@ class BoardRenderer {
   }
 
   resetMoves(positions){
-    for (const pos of positions){
-      const id = pos[1] * 8 + pos[0];
-      const square = document.querySelector(`[square-id="${id}"]`);
-      if (square){
-        square.classList.remove('possible')
-        this.updateSquare(pos)
+    if (positions !== null){
+      for (const pos of positions){
+        const id = pos[1] * 8 + pos[0];
+        const square = document.querySelector(`[square-id="${id}"]`);
+        if (square){
+          square.classList.remove('possible')
+          this.updateSquare(pos)
+        }
       }
     }
   }
@@ -255,7 +260,7 @@ class BoardRenderer {
   }
 
   flipBoard(){
-    this.board.flip = true;
+    this.board.flip = this.board.flip ^ true;
     this.flipCoord();
     this.reverseBoard();
   }
