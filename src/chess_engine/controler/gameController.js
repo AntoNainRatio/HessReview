@@ -10,7 +10,6 @@ class GameController{
     }
 
     async onClick(pos){
-        console.log(`x: ${pos.x}     y:${pos.y}`)
         if(this.selected != null){
             if (this.game.canBeSelected([pos.x,pos.y])){
                 // undisplay prec piece moves and selection
