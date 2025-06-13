@@ -30,3 +30,13 @@ fen_button.addEventListener("click", () => {
 flip_button.addEventListener("click", () => {
     renderer.flipBoard()
 })
+
+
+document.onkeydown = function (e) {
+    if (e.keyCode === 37){
+        console.log("Backward !");
+    }
+    else if (e.keyCode === 39){
+        console.log("Forward !")
+    }
+}

@@ -290,17 +290,22 @@ class Game{
             to: end,
             PEPCapture: null,
             roque: null,
-            promotion: null
+            capture: null,
+            promotion: null,
+            toStr: null
 
         }
         const piece = this.Board.getPiece(start);
         res.piece = piece
         if(piece.color != this.turn){
-            return res
+            return res;
         }
         const dest = this.Board.getPiece(end)
         if (dest != null && piece.color == dest.color){
-            return res
+            return res;
+        }
+        else if (dest != null){
+            res.capture = dest;
         }
         const legalMoves = piece.color == 'w' ? this.whitesMoves : this.blackMoves
 
@@ -334,6 +339,7 @@ class Game{
                 capture = this.Board.getPiece([end[0],start[1]])
                 if(capture != null){
                     this.Board.board[start[1]][end[0]] = null
+                    res.capture = capture
                     res.PEPCapture = [end[0],start[1]]
                     this.deletePieceFromList(capture)
                 }
@@ -351,14 +357,24 @@ class Game{
                 while (this.Board.isOnBoard([curr_x,end[1]]) && this.Board.getPiece([curr_x,end[1]]) == null){
                     curr_x += dir;
                 }
+
                 fromR[0] = curr_x;
                 fromR[1] = end[1];
+
+                const dist_K_R = Math.abs(start[0] - fromR[0])
+                if (dist_K_R === 3){
+                    res.toStr = "O-O";
+                }
+                else {
+                    res.toStr = "O-O-O";
+                }
 
                 toR[0] = end[0]-dir
                 toR[1] = end[1]
 
                 // updating info to inform controller that it's a roque move by telling the [from,two] of the rook
                 res.roque = [fromR,toR]
+                res.toStr = 
 
                 // moving rook
                 this.Board.board[toR[1]][toR[0]] = this.Board.board[fromR[1]][fromR[0]]
@@ -386,7 +402,9 @@ class Game{
                 this.turn == 'w' ? this.whiteKing.isCheck = true : this.blackKing.isCheck = true
             }
             res.isOk = true;
-            this.history.push({start,end});
+            console.log('move added to history:')
+            console.log(res)
+            this.history.push(res);
             return res
         }
         
