@@ -1,10 +1,10 @@
-function parseFen(input){
+function parseFen(input,isFlipped){
     if (input.length === 0){
         return null;
     }
     const res = new Game();
     res.initGame();
-    let i = parseBoard(input,res);
+    let i = parseBoard(input,res,isFlipped);
     if (i === null){
         return null;
     }
@@ -20,7 +20,47 @@ function parseFen(input){
     if (i === null){
         return null;
     }
+    i = halfMove(input, i, res);
+    if (i === null){
+        return null;
+    }
+    i = fullMove(input, i, res);
+    if (i === null){
+        return null;
+    }
     return res;
+}
+
+function fullMove(input, i, res) {
+    if (i >= input.length){
+        return null;
+    }
+    let num = "";
+    while (i < input.length && (input[i] >= '0' && input[i] <= '9')){
+        num += input[i]
+        i++;
+    }
+    if (i != input.length){
+        return null;
+    }
+    res.MoveId = parseInt(num);
+    return i;
+}
+
+function halfMove(input, i ,res) {
+    if (i >= input.length){
+        return null;
+    }
+    let num = "";
+    while (i < input.length && (input[i] >= '0' && input[i] <= '9')){
+        num += input[i]
+        i++;
+    }
+    if (input[i] != ' '){
+        return null;
+    }
+    res.halfMoveId = parseInt(num);
+    return i+1;
 }
 
 function parsePEP(input,i,game){
@@ -184,20 +224,31 @@ function parsePiece(c,x,y){
     }
 }
 
-function parseBoard(input,game){
+function parseBoard(input,game,isFlipped){
     let b = new Board();
+    b.flip = isFlipped;
     b.emptyBoard();
     let x = 7;
     let y = 7;
+    let startX = 7;
+    let xAdder = -1;
+    let yAdder = -1;
+    if (isFlipped){
+        x = 0;
+        startX = 0;
+        y = 0;
+        xAdder = 1;
+        yAdder = 1;
+    }
     let i = 0;
     while(input[i] !== ' '){
         const c = input[i];
         if ('1' <= c && c <= '8'){
-            x -= (c - '0');
+            x += xAdder * (c - '0');
         }
         else if (c === '/'){
-            x = 7;
-            y -= 1;
+            x = startX;
+            y += yAdder;
         }
         else{
             const p = parsePiece(c,x,y);
@@ -217,11 +268,15 @@ function parseBoard(input,game){
                 game.blackPieces.push(p);
             }
             b.putPiece(x,y,p);
-            x-=1;
+            x+=xAdder;
         }
         i++;
     }
-    if (x === -1 && y === 0){
+    if (!isFlipped && x === -1 && y === 0){
+        game.Board = b;
+        return i;
+    }
+    if (isFlipped && x === 8 && y === 7){
         game.Board = b;
         return i;
     }

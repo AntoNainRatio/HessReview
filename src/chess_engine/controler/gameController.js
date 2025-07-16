@@ -128,4 +128,8 @@ class GameController{
         this.boardRenderer.clearHighlight(this.selected[0],this.selected[1])
         this.boardRenderer.updateSquare(info.to)
     }
+
+    flipBoard() {
+        this.boardRenderer.flipBoard();
+    }
 }

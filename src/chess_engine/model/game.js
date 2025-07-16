@@ -16,6 +16,7 @@ class Game{
         this.winner = null
         this.history = []
         this.moveId = 1
+        this.halfMoveId = 0
 
         this.whitesMoves = this.getAllLegalMoves('w')
         this.blackMoves = null
@@ -283,20 +284,8 @@ class Game{
     }
 
     movePiece(start,end){
-        var res = {
-            isOk: false,
-            piece: null,
-            from: start,
-            to: end,
-            PEPCapture: null,
-            roque: null,
-            capture: null,
-            promotion: null,
-            toStr: null
-
-        }
+        var res = new Move(start,end)
         const piece = this.Board.getPiece(start);
-        res.piece = piece
         if(piece.color != this.turn){
             return res;
         }
@@ -402,8 +391,8 @@ class Game{
                 this.turn == 'w' ? this.whiteKing.isCheck = true : this.blackKing.isCheck = true
             }
             res.isOk = true;
-            console.log('move added to history:')
-            console.log(res)
+            // console.log('move added to history:')
+            // console.log(res)
             this.history.push(res);
             return res
         }
@@ -442,5 +431,13 @@ class Game{
             }
         }
         return res;
+    }
+
+    flipBoard() {
+        this.Board.flip();
+    }
+
+    isFlip() {
+        return this.Board.flip;
     }
 }
