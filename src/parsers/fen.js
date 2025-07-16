@@ -16,7 +16,7 @@ function parseFen(input,isFlipped){
     if (i === null){
         return null;
     }
-    i = parsePEP(input,i,res);
+    i = parsePEP(input,i,res,isFlipped);
     if (i === null){
         return null;
     }
@@ -63,34 +63,32 @@ function halfMove(input, i ,res) {
     return i+1;
 }
 
-function parsePEP(input,i,game){
+function parsePEP(input,i,game,isFlipped){
     if (i < input.length){
         if (input[i] === '-'){
             return i+2;
         }
         else{
-            console.log(input[i])
-            const x = 7 - (input[i].charCodeAt(0)-'a'.charCodeAt(0));
-            console.log(`x: ${x}`);
+            let x = 7 - (input[i].charCodeAt(0)-'a'.charCodeAt(0));
+            if (isFlipped){
+                x = 7 - x;
+            }
             i += 1;
             if (i >= input.length){
                 return null;
             }
-            console.log(input[i])
             let y = input[i]-'1';
-            console.log(`y: ${y}`);
             if (y === 2){
                 y = 3;
             }
             else if (y === 5){
                 y = 4;
             }
-            console.log(`newY: ${y}`);
-            console.log(game.Board.board)
+            if (isFlipped){
+                y = 7 - y;
+            }
             const p = game.Board.getPiece([x,y]);
-            console.log(p)
             if (p === null || !(p instanceof Pawn)){
-                console.log('ici')
                 return null;
             }
             else {
@@ -226,7 +224,6 @@ function parsePiece(c,x,y){
 
 function parseBoard(input,game,isFlipped){
     let b = new Board();
-    b.flip = isFlipped;
     b.emptyBoard();
     let x = 7;
     let y = 7;

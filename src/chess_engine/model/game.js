@@ -432,12 +432,4 @@ class Game{
         }
         return res;
     }
-
-    flipBoard() {
-        this.Board.flip();
-    }
-
-    isFlip() {
-        return this.Board.flip;
-    }
 }

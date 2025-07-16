@@ -2,6 +2,7 @@ class BoardRenderer {
   constructor(boardElement, board) {
     this.boardElement = boardElement
     this.board = board
+    this.flip = false;
   }
 
   createPieceImg(coords,squareDiv){
@@ -20,7 +21,8 @@ class BoardRenderer {
 
     // get square representing coords
     let square_id = y * 8 + x;
-    if (this.board.flip){
+    if (this.flip){
+      console.log("FLIPPED")
       square_id = 63-square_id;
     }
     const square = this.boardElement.childNodes[square_id];
@@ -260,7 +262,7 @@ class BoardRenderer {
   }
 
   flipBoard(){
-    this.board.flip = this.board.flip ^ true;
+    this.flip = this.flip ^ true;
     this.flipCoord();
     this.reverseBoard();
   }

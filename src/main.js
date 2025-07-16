@@ -13,7 +13,7 @@ const controller = new GameController(game,renderer);
 
 fen_button.addEventListener("click", () => {
     const input = fen_input.value;
-    game = parseFen(input,game.isFlip());
+    game = parseFen(input,renderer.flip);
     if (game === null){
         // fen_input.value = ""
         fen_error.innerHTML = "Invalid FEN";
