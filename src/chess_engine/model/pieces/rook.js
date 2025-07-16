@@ -1,6 +1,7 @@
 class Rook extends Piece{
     constructor(color,x,y){
-        super(color,"R",x,y)
+        const c = color === 'w' ? "R" : 'r';
+        super(color,c,x,y)
         this.fillDirections()
         this.firstMove = true
     }

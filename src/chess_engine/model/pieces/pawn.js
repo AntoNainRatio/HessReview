@@ -1,6 +1,7 @@
 class Pawn extends Piece{
     constructor(color,x,y){
-        super(color,"P",x,y)
+        const c = color === 'w' ? "P" : 'p';
+        super(color,c,x,y)
         this.firstMove = true
         this.canBePEP = -2
         this.fillDirections()

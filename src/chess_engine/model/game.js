@@ -432,4 +432,9 @@ class Game{
         }
         return res;
     }
+
+    undo(){
+        const move = this.history.pop();
+        // TODO
+    }
 }

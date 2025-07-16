@@ -7,6 +7,7 @@ class Move {
         this.roque = null;
         this.capture = null;
         this.promotion = null;
+        this.wasFirstMove = false;
     }
 
     toString() {

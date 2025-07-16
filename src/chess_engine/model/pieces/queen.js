@@ -1,6 +1,7 @@
 class Queen extends Piece{
     constructor(color,x,y){
-        super(color,"Q",x,y)
+        const c = color === 'w' ? "Q" : 'q';
+        super(color,c,x,y)
         this.fillDirections()
     }
 

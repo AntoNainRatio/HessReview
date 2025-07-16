@@ -1,6 +1,7 @@
 class Knight extends Piece{
     constructor(color,x,y){
-        super(color,"N",x,y)
+        const c = color === 'w' ? "N" : 'n';
+        super(color,c,x,y)
         this.fillDirections()
     }
 

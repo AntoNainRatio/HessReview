@@ -1,6 +1,7 @@
 class Bishop extends Piece{
     constructor(color,x,y){
-        super(color,"B",x,y)
+        const c = color === 'w' ? "B" : 'b';
+        super(color,c,x,y)
         this.fillDirections()
     }
 

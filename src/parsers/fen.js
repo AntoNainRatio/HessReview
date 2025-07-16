@@ -279,3 +279,58 @@ function parseBoard(input,game,isFlipped){
     }
     return null;
 }
+
+
+function getFen(game,isFlipped){
+    let res = "";
+    res += boardToFen(game.Board, isFlipped);
+    return res;
+}
+
+function boardToFen(board,isFlipped){
+    let res = "";
+
+    let x = 7;
+    let startX = 7;
+    let endX = -1;
+    let xAdder = -1;
+
+    let y = 7;
+    let endY = -1;
+    let yAdder = -1;
+    if (isFlipped){
+        x = 0;
+        startX = 0;
+        endY = 8;
+        y = 0;
+        xAdder = 1;
+        yAdder = 1;
+    }
+    let acc = 0;
+    while (y != endY){
+        const p = board.getPiece([x,y]);
+        if (p !== null){
+            if (acc !== 0){
+                res += acc;
+                acc = 0;
+            }
+            res += p.char_;
+        }
+        else{
+            acc += 1;
+        }
+        x += xAdder;
+        if (x === endX){
+            x = startX;
+            y += yAdder;
+            if (acc !== 0){
+                res += acc;
+                acc = 0;
+            }
+            if (y !== endY){
+                res += "/";
+            }
+        }
+    }
+    return res;
+}

@@ -1,6 +1,7 @@
 class King extends Piece{
     constructor(color,x,y){
-        super(color,"K",x,y)
+        const c = color === 'w' ? "K" : 'k';
+        super(color,c,x,y)
         this.isCheck = false
         this.firstMove = true
         this.fillDirections()

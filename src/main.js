@@ -1,13 +1,14 @@
-const id = 'gameboard'
-const boardElement = document.getElementById(id)
-const fen_input = document.getElementById("FEN_input")
-const fen_button = document.getElementById("FEN_button")
-const fen_error = document.getElementById("FEN_error")
-const flip_button = document.getElementById("flip_button")
+const id = 'gameboard';
+const boardElement = document.getElementById(id);
+const fen_input = document.getElementById("FEN_input");
+const fen_button = document.getElementById("FEN_button");
+const fen_error = document.getElementById("FEN_error");
+const flip_button = document.getElementById("flip_button");
+const copyFEN_button = document.getElementById("FEN_copy");
 
-let game = new Game()
+let game = new Game();
 
-const renderer = new BoardRenderer(boardElement,game.Board)
+const renderer = new BoardRenderer(boardElement,game.Board);
 
 const controller = new GameController(game,renderer);
 
@@ -25,6 +26,11 @@ fen_button.addEventListener("click", () => {
         renderer.updateAllSquares();
     }
     // game = parse function
+})
+
+copyFEN_button.addEventListener("click", () => {
+    let fen = getFen(game,renderer.flip);
+    navigator.clipboard.writeText(fen);
 })
 
 flip_button.addEventListener("click", () => {
