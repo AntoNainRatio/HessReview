@@ -284,8 +284,14 @@ function parseBoard(input,game,isFlipped){
 function getFen(game,isFlipped){
     let res = "";
     res += boardToFen(game.Board, isFlipped);
+    res += turnFen(game);
+    res += roqueFen(game);
+    res += pepFen(game);
+    console.log(res);
     return res;
 }
+
+
 
 function boardToFen(board,isFlipped){
     let res = "";
@@ -298,14 +304,14 @@ function boardToFen(board,isFlipped){
     let y = 7;
     let endY = -1;
     let yAdder = -1;
-    if (isFlipped){
-        x = 0;
-        startX = 0;
-        endY = 8;
-        y = 0;
-        xAdder = 1;
-        yAdder = 1;
-    }
+    // if (isFlipped){
+    //     x = 0;
+    //     startX = 0;
+    //     endY = 8;
+    //     y = 0;
+    //     xAdder = 1;
+    //     yAdder = 1;
+    // }
     let acc = 0;
     while (y != endY){
         const p = board.getPiece([x,y]);
@@ -313,6 +319,9 @@ function boardToFen(board,isFlipped){
             if (acc !== 0){
                 res += acc;
                 acc = 0;
+            }
+            if (!p.char_){
+                console.log(p)
             }
             res += p.char_;
         }
@@ -332,5 +341,50 @@ function boardToFen(board,isFlipped){
             }
         }
     }
-    return res;
+    return res + " ";
+}
+
+function turnFen(game){
+    return game.turn + " ";
+}
+
+function roqueFen(game){
+    let res = "";
+    if (game.whiteKing.firstMove){
+        const r_kside = game.Board.getPiece([7,7])
+        if (r_kside !== null && r_kside.firstMove){
+            res += "K";
+        }
+        const r_qside = game.Board.getPiece([7,0])
+        if (r_qside !== null && r_qside.firstMove){
+            res += "Q";
+        }
+    }
+    if (game.blackKing.firstMove){
+        const r_kside = game.Board.getPiece([0,7])
+        if (r_kside !== null && r_kside.firstMove){
+            res += "k";
+        }
+        const r_qside = game.Board.getPiece([0,0])
+        if (r_qside !== null && r_qside.firstMove){
+            res += "q";
+        }
+    }
+    if (res.length === 0){
+        return "- ";
+    }
+    return res + " ";
+}
+
+function pepFen(game){
+    const l = game.turn === "w" ? game.blackPieces : game.whitePieces;
+    const rows='12345678';
+    const cols='hgfedcba';
+    for (p of l) {
+        if (p instanceof Pawn && p.canBePEP === game.moveId - 1){
+            placeToPEP = p.y + (p.color === 'w'? -1 : 1);
+            return cols[p.x]+rows[placeToPEP]+" ";
+        }
+    }
+    return "- "
 }

@@ -22,7 +22,6 @@ class BoardRenderer {
     // get square representing coords
     let square_id = y * 8 + x;
     if (this.flip){
-      console.log("FLIPPED")
       square_id = 63-square_id;
     }
     const square = this.boardElement.childNodes[square_id];
