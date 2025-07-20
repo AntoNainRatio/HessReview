@@ -15,7 +15,9 @@ class Game{
         this.state = 'p'
         this.winner = null
         this.history = []
-        this.moveId = 1
+        this.moveId = 0
+
+        this.fullMoveId = 1
         this.halfMoveId = 0
 
         this.whitesMoves = this.getAllLegalMoves('w')
@@ -141,12 +143,13 @@ class Game{
     }
 
     switchTurn(){
-        this.moveId += 1
+        this.moveId += 1;
         if (this.turn == 'w'){
             this.turn = 'b'
             this.blackMoves = this.getAllLegalMoves(this.turn)
         }
         else{
+            this.fullMoveId += 1
             this.turn = 'w'
             this.whitesMoves = this.getAllLegalMoves(this.turn)
         }
@@ -391,6 +394,10 @@ class Game{
                 this.turn == 'w' ? this.whiteKing.isCheck = true : this.blackKing.isCheck = true
             }
             res.isOk = true;
+
+            if (res.capture === null && !(piece instanceof Pawn)){
+                this.halfMoveId += 1
+            }
             // console.log('move added to history:')
             // console.log(res)
             this.history.push(res);

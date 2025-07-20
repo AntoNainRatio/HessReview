@@ -281,19 +281,20 @@ function parseBoard(input,game,isFlipped){
 }
 
 
-function getFen(game,isFlipped){
+function getFen(game){
     let res = "";
-    res += boardToFen(game.Board, isFlipped);
+    res += boardToFen(game.Board);
     res += turnFen(game);
     res += roqueFen(game);
     res += pepFen(game);
+    res += halfFullMove(game);
     console.log(res);
     return res;
 }
 
 
 
-function boardToFen(board,isFlipped){
+function boardToFen(board){
     let res = "";
 
     let x = 7;
@@ -304,14 +305,6 @@ function boardToFen(board,isFlipped){
     let y = 7;
     let endY = -1;
     let yAdder = -1;
-    // if (isFlipped){
-    //     x = 0;
-    //     startX = 0;
-    //     endY = 8;
-    //     y = 0;
-    //     xAdder = 1;
-    //     yAdder = 1;
-    // }
     let acc = 0;
     while (y != endY){
         const p = board.getPiece([x,y]);
@@ -387,4 +380,8 @@ function pepFen(game){
         }
     }
     return "- "
+}
+
+function halfFullMove(game){
+    return game.halfMoveId + " " + game.fullMoveId;
 }
