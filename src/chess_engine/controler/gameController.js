@@ -132,4 +132,16 @@ class GameController{
     flipBoard() {
         this.boardRenderer.flipBoard();
     }
+
+    undo() {
+        const toUpdates = this.game.undoMove();
+        for (const square of toUpdates) {
+            this.boardRenderer.updateSquare(square)
+        }
+    }
+
+    redo() {
+        this.game.redoMove();
+        this.boardRenderer.render();
+    }
 }

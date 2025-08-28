@@ -15,6 +15,7 @@ class Game{
         this.state = 'p'
         this.winner = null
         this.history = []
+        this.undone = []
         this.moveId = 0
 
         this.fullMoveId = 1
@@ -154,6 +155,19 @@ class Game{
             this.whitesMoves = this.getAllLegalMoves(this.turn)
         }
 
+    }
+
+    undoTurn(){
+        this.moveId -=1;
+        if (this.turn == 'w'){
+            this.turn = 'b'
+            this.blackMoves = this.getAllLegalMoves(this.turn)
+        }
+        else{
+            this.fullMoveId += 1
+            this.turn = 'w'
+            this.whitesMoves = this.getAllLegalMoves(this.turn)
+        }
     }
 
     initLegalMoves(){
@@ -308,7 +322,8 @@ class Game{
         if (isLegal){
             // handle first move of pieces that got it
             if (piece instanceof Pawn || piece instanceof Rook || piece instanceof King){
-                piece.firstMove = false
+                piece.firstMove = false;
+                res.wasFirstMove = true;
             }
 
             if(piece instanceof Pawn && Math.abs(end[1] - start[1]) == 2){
@@ -364,7 +379,7 @@ class Game{
                 toR[0] = end[0]-dir
                 toR[1] = end[1]
 
-                // updating info to inform controller that it's a roque move by telling the [from,two] of the rook
+                // updating info to inform controller that it's a roque move by telling the [from,tw] of the rook
                 res.roque = [fromR,toR]
                 res.toStr = 
 
@@ -409,10 +424,12 @@ class Game{
 
     putPiece(pos,piece){
         const old = this.Board.board[pos[1]][pos[0]]
-        piece.x = old.x
-        piece.y = old.y
-        piece.color = old.color
-        this.deletePieceFromList(old)
+        if (old !== null){
+            piece.x = old.x
+            piece.y = old.y
+            piece.color = old.color
+            this.deletePieceFromList(old)
+        }
         if (piece.color == 'w'){
             this.whitePieces.push(piece)
         }
@@ -440,8 +457,58 @@ class Game{
         return res;
     }
 
-    undo(){
+    undoMove(){
+        //
+        // undo le move et return la liste des cases qui ont ete modifie
+        //
+
+        const res = [];
+
         const move = this.history.pop();
-        // TODO
+        if (move === undefined) {
+            return res;
+        }
+
+        console.log('move:');
+        console.log(move);
+        this.Board.move(move.to,move.from);
+        res.push(move.from);
+        res.push(move.to)
+
+        // handling capture
+        const capture = move.capture;
+        if (capture !== null){
+            this.putPiece([capture.x,capture.y],capture);
+            res.push([capture.x,capture.y])
+        }
+
+        // handling first moves
+        if (move.wasFirstMove){
+            const p = this.Board.getPiece(move.from);
+            if (p !== null){
+                p.firstMove = true;
+            }
+        }
+
+        const r = move.roque;
+        if (r !== null) {
+            const fromR = r[0]
+            const toR = r[1]
+            this.Board.move(toR,fromR);
+            res.push(fromR);
+            res.push(toR);
+        }
+
+        // met le move annule dans la liste des undones
+        this.undone.push(move);
+
+        this.undoTurn();
+
+        // renvois la liste a update
+        return res;
+    }
+
+    redoMove() {
+        const move = this.undone.pop();
     }
 }

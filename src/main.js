@@ -40,9 +40,9 @@ flip_button.addEventListener("click", () => {
 
 document.onkeydown = function (e) {
     if (e.keyCode === 37){
-        console.log("Backward !");
+        controller.undo();
     }
     else if (e.keyCode === 39){
-        console.log("Forward !")
+        controller.redo();
     }
 }
