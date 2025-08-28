@@ -28,7 +28,7 @@ class Piece{
     }
 
     getImagePath(){
-        return `img/chesspieces/${this.color}${this.char}.png`
+        return `img/chesspieces/${this.char}.png`
     }
      
     fillDirections(){
