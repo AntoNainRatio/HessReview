@@ -490,6 +490,7 @@ class Game{
             }
         }
 
+        // handling roque
         const r = move.roque;
         if (r !== null) {
             const fromR = r[0]
@@ -497,6 +498,14 @@ class Game{
             this.Board.move(toR,fromR);
             res.push(fromR);
             res.push(toR);
+        }
+
+        // handling promotion
+        if (move.promotion){
+            const pawnColor = this.turn === 'w' ? 'b' : 'w';
+            const pawn = new Pawn(pawnColor,move.from[0],move.from[1])
+            pawn.firstMove = false;
+            this.putPiece(move.from,pawn);
         }
 
         // met le move annule dans la liste des undones
