@@ -8,6 +8,7 @@ class Move {
         this.capture = null;
         this.promotion = null;
         this.wasFirstMove = false;
+        this.halfMoveId = null;
     }
 
     toString() {

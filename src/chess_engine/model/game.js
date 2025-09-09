@@ -160,11 +160,11 @@ class Game{
     undoTurn(){
         this.moveId -=1;
         if (this.turn == 'w'){
+            this.fullMoveId -= 1
             this.turn = 'b'
             this.blackMoves = this.getAllLegalMoves(this.turn)
         }
         else{
-            this.fullMoveId += 1
             this.turn = 'w'
             this.whitesMoves = this.getAllLegalMoves(this.turn)
         }
@@ -381,7 +381,9 @@ class Game{
 
                 // updating info to inform controller that it's a roque move by telling the [from,tw] of the rook
                 res.roque = [fromR,toR]
-                res.toStr = 
+
+                // TODO
+                // res.toStr = 
 
                 // moving rook
                 this.Board.board[toR[1]][toR[0]] = this.Board.board[fromR[1]][fromR[0]]
@@ -411,7 +413,8 @@ class Game{
             res.isOk = true;
 
             if (res.capture === null && !(piece instanceof Pawn)){
-                this.halfMoveId += 1
+                res.halfMoveId = this.halfMoveId;
+                this.halfMoveId += 1;
             }
             // console.log('move added to history:')
             // console.log(res)
@@ -506,6 +509,11 @@ class Game{
             const pawn = new Pawn(pawnColor,move.from[0],move.from[1])
             pawn.firstMove = false;
             this.putPiece(move.from,pawn);
+        }
+
+        //handling half-move
+        if (move.halfMoveId != null) {
+            this.halfMoveId = move.halfMoveId;
         }
 
         // met le move annule dans la liste des undones
