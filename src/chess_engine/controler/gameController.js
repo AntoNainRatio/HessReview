@@ -57,7 +57,7 @@ class GameController{
 
             const pieceName = button.attributes.getNamedItem('data-piece')
             
-            const imagePath = 'img/chesspieces/'+pieceName.value+'.png'
+            const imagePath = 'img/chesspieces/'+color+pieceName.value+'.png'
             button.childNodes[0].src = imagePath
 
             button.addEventListener('click', function onClick() {
@@ -139,6 +139,12 @@ class GameController{
         const toUpdates = this.game.undoMove();
         for (const square of toUpdates) {
             this.boardRenderer.updateSquare(square)
+        }
+        this.boardRenderer.clearKings(this.game.whiteKing,this.game.blackKing)
+
+        const checkPos = this.game.getCheckedKingPos()
+        if (checkPos){
+            this.boardRenderer.check(checkPos[0],checkPos[1])
         }
     }
 

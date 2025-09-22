@@ -408,6 +408,7 @@ class Game{
                 this.state = 'pat'
             }
             if(this.isInCheck(this.turn)){
+                res.isKingInCheck = true;
                 this.turn == 'w' ? this.whiteKing.isCheck = true : this.blackKing.isCheck = true
             }
             res.isOk = true;
@@ -509,6 +510,16 @@ class Game{
             const pawn = new Pawn(pawnColor,move.from[0],move.from[1])
             pawn.firstMove = false;
             this.putPiece(move.from,pawn);
+        }
+
+        // handling check
+        if (move.isWhiteInCheck != this.whiteKing.isCheck){
+            console.log("White king switch status")
+            this.whiteKing.isCheck = move.isWhiteInCheck;
+        }
+        if (move.isBlackInCheck != this.blackKing.isCheck){
+            console.log("Black king switch status")
+            this.blackKing.isCheck = move.isBlackInCheck;
         }
 
         //handling half-move

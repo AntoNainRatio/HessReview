@@ -9,6 +9,9 @@ class Move {
         this.promotion = null;
         this.wasFirstMove = false;
         this.halfMoveId = null;
+        // TODO: wasWhiteInCheck ??
+        this.isWhiteInCheck = false;
+        this.isBlackInCheck = false;
     }
 
     toString() {
