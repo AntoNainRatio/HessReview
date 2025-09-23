@@ -10,8 +10,8 @@ class Move {
         this.wasFirstMove = false;
         this.halfMoveId = null;
         // TODO: wasWhiteInCheck ??
-        this.isWhiteInCheck = false;
-        this.isBlackInCheck = false;
+        this.wasWhiteCheck = false;
+        this.wasBlackCheck = false;
     }
 
     toString() {

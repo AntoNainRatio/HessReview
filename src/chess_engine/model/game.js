@@ -303,9 +303,18 @@ class Game{
     movePiece(start,end){
         var res = new Move(start,end)
         const piece = this.Board.getPiece(start);
+
         if(piece.color != this.turn){
             return res;
         }
+
+        if (this.whiteKing.isCheck){
+            res.wasWhiteCheck = true;
+        }
+        if (this.blackKing.isCheck){
+            res.wasBlackCheck = true;
+        }
+
         const dest = this.Board.getPiece(end)
         if (dest != null && piece.color == dest.color){
             return res;
@@ -408,7 +417,6 @@ class Game{
                 this.state = 'pat'
             }
             if(this.isInCheck(this.turn)){
-                res.isKingInCheck = true;
                 this.turn == 'w' ? this.whiteKing.isCheck = true : this.blackKing.isCheck = true
             }
             res.isOk = true;
@@ -513,18 +521,20 @@ class Game{
         }
 
         // handling check
-        if (move.isWhiteInCheck != this.whiteKing.isCheck){
-            console.log("White king switch status")
-            this.whiteKing.isCheck = move.isWhiteInCheck;
+        if (move.wasWhiteCheck != this.whiteKing.isCheck){
+            this.whiteKing.isCheck = move.wasWhiteCheck;
         }
         if (move.isBlackInCheck != this.blackKing.isCheck){
-            console.log("Black king switch status")
-            this.blackKing.isCheck = move.isBlackInCheck;
+            this.blackKing.isCheck = move.wasBlackCheck;
         }
 
         //handling half-move
         if (move.halfMoveId != null) {
             this.halfMoveId = move.halfMoveId;
+        }
+
+        if (this.winner != null){
+            this.winner = null;
         }
 
         // met le move annule dans la liste des undones
