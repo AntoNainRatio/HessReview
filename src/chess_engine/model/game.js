@@ -584,7 +584,7 @@ class Game{
         if (move.wasFirstMove){
             const p = this.Board.getPiece(move.to);
             if (p !== null){
-                p.firstMove = true;
+                p.firstMove = false;
             }
         }
 
