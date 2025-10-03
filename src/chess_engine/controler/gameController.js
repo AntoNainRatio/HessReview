@@ -155,5 +155,11 @@ class GameController{
                 this.boardRenderer.updateSquare(square)
             }
         }
+        this.boardRenderer.clearKings(this.game.whiteKing,this.game.blackKing)
+
+        const checkPos = this.game.getCheckedKingPos()
+        if (checkPos){
+            this.boardRenderer.check(checkPos[0],checkPos[1])
+        }
     }
 }

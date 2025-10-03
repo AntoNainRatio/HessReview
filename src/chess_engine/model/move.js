@@ -1,7 +1,6 @@
 class Move {
     constructor(from,to) {
         this.isOk = false;
-        // this.piece = null; probably don't need it
         this.from = from;
         this.to = to;
         this.roque = null;
@@ -9,7 +8,6 @@ class Move {
         this.promotion = null;
         this.wasFirstMove = false;
         this.halfMoveId = null;
-        // TODO: wasWhiteInCheck ??
         this.wasWhiteCheck = false;
         this.wasBlackCheck = false;
     }

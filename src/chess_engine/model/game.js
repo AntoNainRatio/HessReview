@@ -428,6 +428,10 @@ class Game{
             // console.log('move added to history:')
             // console.log(res)
             this.history.push(res);
+
+            if (this.undone.length != 0) {
+                this.undone = [];
+            }
             return res
         }
         
@@ -481,8 +485,19 @@ class Game{
             return res;
         }
 
-        console.log('move:');
-        console.log(move);
+        // get current state into a move an push it into undone
+        let undoneMove = new Move(move.from, move.to)
+        undoneMove.isOk = move.isOk
+        undoneMove.roque = move.roque
+        undoneMove.capture = move.capture
+        undoneMove.promotion = move.promotion
+        undoneMove.wasFirstMove = move.wasFirstMove
+        undoneMove.halfMoveId = move.halfMoveId
+        undoneMove.wasWhiteCheck = this.whiteKing.isCheck
+        undoneMove.wasBlackCheck = this.blackKing.isCheck
+
+        this.undone.push(undoneMove);
+
         this.Board.move(move.to,move.from);
         res.push(move.from);
         res.push(move.to)
@@ -537,9 +552,6 @@ class Game{
             this.winner = null;
         }
 
-        // met le move annule dans la liste des undones
-        this.undone.push(move);
-
         this.undoTurn();
 
         // renvois la liste a update
@@ -547,6 +559,68 @@ class Game{
     }
 
     redoMove() {
+        const res = [];
+
         const move = this.undone.pop();
+        if (move === undefined) {
+            return res;
+        }
+
+        console.log("move from undone:")
+        console.log
+
+        this.Board.move(move.from,move.to);
+        res.push(move.from);
+        res.push(move.to)
+
+        // handling capture
+        const capture = move.capture;
+        if (capture !== null){
+            this.deletePieceFromList(capture)
+            res.push([capture.x,capture.y])
+        }
+
+        // handling first moves
+        if (move.wasFirstMove){
+            const p = this.Board.getPiece(move.to);
+            if (p !== null){
+                p.firstMove = true;
+            }
+        }
+
+        // handling roque
+        const r = move.roque;
+        if (r !== null) {
+            const fromR = r[0]
+            const toR = r[1]
+            this.Board.move(fromR,toR);
+            res.push(fromR);
+            res.push(toR);
+        }
+
+        // handling promotion
+        if (move.promotion){
+            const pawn = new Pawn(this.turn,move.to[0],move.to[1])
+            pawn.firstMove = false;
+            this.putPiece(move.to,pawn);
+        }
+
+        // handling check
+        if (move.wasWhiteCheck != this.whiteKing.isCheck){
+            this.whiteKing.isCheck = move.wasWhiteCheck;
+        }
+        if (move.isBlackInCheck != this.blackKing.isCheck){
+            this.blackKing.isCheck = move.wasBlackCheck;
+        }
+
+        //handling half-move
+        if (move.halfMoveId != null) {
+            this.halfMoveId = move.halfMoveId;
+        }
+
+        this.history.push(move)
+        this.switchTurn()
+
+        return res;
     }
 }
