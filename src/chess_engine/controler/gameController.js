@@ -57,7 +57,8 @@ class GameController{
 
             const pieceName = button.attributes.getNamedItem('data-piece')
             
-            const imagePath = 'img/chesspieces/'+color+pieceName.value+'.png'
+            const imagePath = 'img/chesspieces/'+color+pieceName.value[color === 'w' ? 0 : 1]+'.png'
+            console.log(imagePath)
             button.childNodes[0].src = imagePath
 
             button.addEventListener('click', function onClick() {
@@ -91,21 +92,22 @@ class GameController{
                 // get user choice from promotion
                 console.log("info:");
                 console.log(info);
-                const pieceName = await this.promotionPopUp(this.game.turn)
+                const color = this.game.turn === 'w' ? 'b' : 'w'
+                const pieceName = await this.promotionPopUp(color)
 
                 let c;
                 switch(pieceName){
-                    case "Q":
-                        c = new Queen('w',-1,-1)
+                    case "Qq":
+                        c = new Queen(color,-1,-1)
                         break;
-                    case "R":
-                        c = new Rook('w',-1,-1)
+                    case "Rr":
+                        c = new Rook(color,-1,-1)
                         break;
-                    case "N":
-                        c = new Knight('w',-1,-1)
+                    case "Nn":
+                        c = new Knight(color,-1,-1)
                         break;
-                    case "B":
-                        c = new Bishop('w',-1,-1)
+                    case "Bb":
+                        c = new Bishop(color,-1,-1)
                         break;
                     default:
                         console.error("Invalid choice on promotion")
