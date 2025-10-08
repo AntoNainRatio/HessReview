@@ -484,13 +484,14 @@ class Game{
         if (move === undefined) {
             return res;
         }
+        console.log(move)
 
         // get current state into a move an push it into undone
         let undoneMove = new Move(move.from, move.to)
         undoneMove.isOk = move.isOk
         undoneMove.roque = move.roque
         undoneMove.capture = move.capture
-        undoneMove.promotion = move.promotion
+        undoneMove.promotion = this.Board.getPiece(move.to)
         undoneMove.wasFirstMove = move.wasFirstMove
         undoneMove.halfMoveId = move.halfMoveId
         undoneMove.wasWhiteCheck = this.whiteKing.isCheck
@@ -528,7 +529,7 @@ class Game{
         }
 
         // handling promotion
-        if (move.promotion){
+        if (move.promotion !== null){
             const pawnColor = this.turn === 'w' ? 'b' : 'w';
             const pawn = new Pawn(pawnColor,move.from[0],move.from[1])
             pawn.firstMove = false;
@@ -566,8 +567,8 @@ class Game{
             return res;
         }
 
-        console.log("move from undone:")
-        console.log
+        // console.log("move from undone:")
+        // console.log
 
         this.Board.move(move.from,move.to);
         res.push(move.from);
@@ -599,10 +600,13 @@ class Game{
         }
 
         // handling promotion
-        if (move.promotion){
-            const pawn = new Pawn(this.turn,move.to[0],move.to[1])
-            pawn.firstMove = false;
-            this.putPiece(move.to,pawn);
+        if (move.promotion !== null){
+            if (move.promotion instanceof Piece) {
+                this.putPiece(move.to,move.promotion);
+            }
+            else{
+                throw new TypeError("redoMove: move.promotion not instance of Piece")
+            }
         }
 
         // handling check

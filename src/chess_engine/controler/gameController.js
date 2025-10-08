@@ -58,7 +58,6 @@ class GameController{
             const pieceName = button.attributes.getNamedItem('data-piece')
             
             const imagePath = 'img/chesspieces/'+color+pieceName.value[color === 'w' ? 0 : 1]+'.png'
-            console.log(imagePath)
             button.childNodes[0].src = imagePath
 
             button.addEventListener('click', function onClick() {
@@ -88,10 +87,8 @@ class GameController{
                 this.boardRenderer.updateSquare(info.roque[1])
             }
 
-            if (info.promotion){
+            if (info.promotion === true){
                 // get user choice from promotion
-                console.log("info:");
-                console.log(info);
                 const color = this.game.turn === 'w' ? 'b' : 'w'
                 const pieceName = await this.promotionPopUp(color)
 
