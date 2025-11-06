@@ -4,7 +4,9 @@ function parseFen(input,isFlipped){
     }
     const res = new Game();
     res.initGame();
+
     let i = parseBoard(input,res,isFlipped);
+    
     if (i === null){
         return null;
     }
@@ -28,6 +30,8 @@ function parseFen(input,isFlipped){
     if (i === null){
         return null;
     }
+    
+    res.initLegalMoves();
     return res;
 }
 
@@ -288,7 +292,6 @@ function getFen(game){
     res += roqueFen(game);
     res += pepFen(game);
     res += halfFullMove(game);
-    console.log(res);
     return res;
 }
 

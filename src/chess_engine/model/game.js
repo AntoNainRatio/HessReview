@@ -179,29 +179,26 @@ class Game{
         }
     }
 
-    verifyRoque(pos1,pos2,color){
+    verifyRoque(king,pos2,color){
         // function to verifiy if rook thos two pos is valid
         // return the move in x coord of the king: diff_x * 2 if true
         //                                         0 otherwise
-        const start_x = pos1[0]
-        const start_y = pos1[1]
+
+        const start_x = king.x
+        const start_y = king.y
         const end_x = pos2[0]
         const end_y = pos2[1]
 
         const diff_x = end_x - start_x > 0 ? 1 : -1;
         let curr = start_x + diff_x;
-        while (curr != end_x){
 
-            // console.log([curr,start_y])
-            if(this.Board.getPiece([curr,start_y]) != null){
-                return 0
-            }
-            if(Math.abs(curr - start_x) <= 2 && this.isInCheck(color)){
-                return 0
-            }
-            curr += diff_x;
+        if (this.Board.getPiece([curr,start_y]) != null || this.putKingInCheck(king,[curr,start_y])){
+            return 0
         }
-
+        curr += diff_x;
+        if (this.Board.getPiece([curr,start_y]) != null || this.putKingInCheck(king,[curr,start_y])){
+            return 0
+        }
         return diff_x*2
     }
 
@@ -209,12 +206,12 @@ class Game{
         if(king.isCheck){
             return
         }
-        // console.log(king.color)
+
         if (rook1 != null && king.firstMove && rook1.firstMove){
             if(king.y == rook1.y){
                 const pos1 = [king.x,king.y]
                 const pos2 = [rook1.x,rook1.y]
-                const diff_x = this.verifyRoque(pos1,pos2,king.color)
+                const diff_x = this.verifyRoque(king,pos2,king.color)
                 if (diff_x != 0){
                     moves.push({piece: king, to: [king.x+diff_x,king.y]})
                 }
@@ -226,7 +223,7 @@ class Game{
                 const pos1 = [king.x,king.y]
                 const pos2 = [rook2.x,rook2.y]
 
-                const diff_x = this.verifyRoque(pos1,pos2,king.color)
+                const diff_x = this.verifyRoque(king,pos2,king.color)
                 if (diff_x != 0){
                     moves.push({piece: king, to: [king.x+diff_x,king.y]})
                 }
@@ -236,14 +233,6 @@ class Game{
 
     checksAfterPromo(){
         const defender = this.turn;
-        // console.log(`turn: ${this.turn}`)
-        // console.log("nooooooooooooon")
-        // if(defender === 'w'){
-        //     console.log(this.whitePieces);
-        // }
-        // else{
-        //     console.log(this.blackPieces);
-        // }
 
         if(defender === 'w'){
             this.whitesMoves = this.getAllLegalMoves(this.turn);
@@ -252,7 +241,6 @@ class Game{
             this.blackMoves = this.getAllLegalMoves(this.turn);
         }
         if (this.isInCheck(defender)){
-            // console.log("ouiiiii")
             if(defender === 'w'){
                 this.whiteKing.isCheck = true;
             }
@@ -425,8 +413,6 @@ class Game{
                 res.halfMoveId = this.halfMoveId;
                 this.halfMoveId += 1;
             }
-            // console.log('move added to history:')
-            // console.log(res)
             this.history.push(res);
 
             if (this.undone.length != 0) {
@@ -484,14 +470,15 @@ class Game{
         if (move === undefined) {
             return res;
         }
-        console.log(move)
 
         // get current state into a move an push it into undone
         let undoneMove = new Move(move.from, move.to)
         undoneMove.isOk = move.isOk
         undoneMove.roque = move.roque
         undoneMove.capture = move.capture
-        undoneMove.promotion = this.Board.getPiece(move.to)
+
+        undoneMove.promotion = move.promotion ? this.Board.getPiece(move.to) : null;
+
         undoneMove.wasFirstMove = move.wasFirstMove
         undoneMove.halfMoveId = move.halfMoveId
         undoneMove.wasWhiteCheck = this.whiteKing.isCheck
@@ -566,9 +553,6 @@ class Game{
         if (move === undefined) {
             return res;
         }
-
-        // console.log("move from undone:")
-        // console.log
 
         this.Board.move(move.from,move.to);
         res.push(move.from);
