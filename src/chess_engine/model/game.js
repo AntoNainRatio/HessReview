@@ -318,7 +318,7 @@ class Game{
           );
         if (isLegal){
             // handle first move of pieces that got it
-            if (piece instanceof Pawn || piece instanceof Rook || piece instanceof King){
+            if ((piece instanceof Pawn || piece instanceof Rook || piece instanceof King) && piece.firstMove){
                 piece.firstMove = false;
                 res.wasFirstMove = true;
             }
